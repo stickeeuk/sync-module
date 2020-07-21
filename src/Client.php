@@ -7,17 +7,10 @@ use Illuminate\Support\Str;
 use Stickee\Sync\Models\Property;
 
 /**
- * Property Service
  */
-class ClientService
+class Client implements ClientInterface
 {
-    public function updateTables()
-    {
-
-
-    }
-
-    public function updateTable(string $table)
+    public function __construct()
     {
 
     }

@@ -4,13 +4,25 @@ namespace Stickee\Sync\Test;
 
 use Faker\Factory;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Stickee\Sync\Seeds\TestSeeder;
 use Stickee\Sync\ServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
-    protected $connectionsToTransact = ['test_mysql'];
+    use DatabaseMigrations {
+        runDatabaseMigrations as originalRunDatabaseMigrations;
+    }
+
+    public function runDatabaseMigrations()
+    {
+        $this->useSqlite();
+        $this->originalRunDatabaseMigrations();
+
+        $this->useMysql();
+        $this->originalRunDatabaseMigrations();
+    }
 
     /**
      * Setup the test environment.
@@ -18,14 +30,6 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
-        \DB::listen(function($sql) {
-            //dump($sql->connection->getName(), $sql->sql);
-
-            if ($sql->bindings)
-                ;//dump($sql->bindings);
-            //dump($sql->time);
-        });
 
         $faker = Factory::create();
         $faker->seed(1234);

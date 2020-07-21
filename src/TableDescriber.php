@@ -5,11 +5,14 @@ namespace Stickee\Sync;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
+use Stickee\Sync\Traits\ChecksTables;
 
 /**
  */
 class TableDescriber implements TableDescriberInterface
 {
+    use ChecksTables;
+
     private $connection;
 
     public function __construct(?string $connection = null)
@@ -19,9 +22,7 @@ class TableDescriber implements TableDescriberInterface
 
     public function describe(string $table): array
     {
-        if (!in_array($table, config('sync.allowed_tables'))) {
-            throw new InvalidArgumentException('Table "' . $table . '" is not in sync.allowed_tables');
-        }
+        $this->checkTable($table);
 
         $schema = DB::connection($this->connection)->getSchemaBuilder();
 

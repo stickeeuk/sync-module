@@ -5,11 +5,14 @@ namespace Stickee\Sync\TableHashers;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
+use Stickee\Sync\Traits\ChecksTables;
 
 /**
  */
 class SqliteTableHasher implements TableHasherInterface
 {
+    use ChecksTables;
+
     private $tableDescriber;
 
     public function __construct(TableDescriberInterface $tableDescriber)
@@ -19,6 +22,8 @@ class SqliteTableHasher implements TableHasherInterface
 
     public function hash(string $table): string
     {
+        $this->checkTable($table);
+
         $fields = [];
         $tableDescription = $this->tableDescriber->describe($table);
         $connection = $this->tableDescriber->getConnection();
