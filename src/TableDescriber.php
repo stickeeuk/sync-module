@@ -10,18 +10,20 @@ use Stickee\Sync\Interfaces\TableDescriberInterface;
  */
 class TableDescriber implements TableDescriberInterface
 {
-    public function __construct()
-    {
+    private $connection;
 
+    public function __construct(?string $connection = null)
+    {
+        $this->connection = $connection ?: config('database.default');
     }
 
-    public function describe(string $table, ?string $connection = null): array
+    public function describe(string $table): array
     {
         if (!in_array($table, config('sync.allowed_tables'))) {
             throw new InvalidArgumentException('Table "' . $table . '" is not in sync.allowed_tables');
         }
 
-        $schema = DB::connection($connection)->getSchemaBuilder();
+        $schema = DB::connection($this->connection)->getSchemaBuilder();
 
         $columns = $schema->getColumnListing($table);
         $result = ['columns' => []];
@@ -36,5 +38,10 @@ class TableDescriber implements TableDescriberInterface
         }
 
         return $result;
+    }
+
+    public function getConnection(): ?string
+    {
+        return $this->connection;
     }
 }

@@ -17,19 +17,20 @@ class SqliteTableHasher implements TableHasherInterface
         $this->tableDescriber = $tableDescriber;
     }
 
-    public function hash(string $table, ?string $connection = null): string
+    public function hash(string $table): string
     {
         $fields = [];
-        $tableDescription = $this->tableDescriber->describe($table, $connection); // todo this is wrong, need connection in the constructor
+        $tableDescription = $this->tableDescriber->describe($table);
+        $connection = $this->tableDescriber->getConnection();
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = $column['name'];
         }
 
-
         $hash = '';
 
-        DB::table($table)
+        DB::connection($connection)
+            ->table($table)
             ->select($fields)
             ->orderBy('rowid')
             ->chunk(1000, function ($rows) use (&$hash) {

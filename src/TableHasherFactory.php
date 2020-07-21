@@ -13,7 +13,7 @@ use Stickee\Sync\TableHashers\SqliteTableHasher;
  */
 class TableHasherFactory
 {
-    public function create($connection = null): TableHasherInterface
+    public function create(?string $connection = null): TableHasherInterface
     {
         $connection = $connection ?: config('database.default');
         $driver = config('database.connections.' . $connection . '.driver');

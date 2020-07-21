@@ -17,28 +17,29 @@ class MySqlTableHasher implements TableHasherInterface
         $this->tableDescriber = $tableDescriber;
     }
 
-    public function hash(string $table, ?string $connection = null): string
+    public function hash(string $table): string
     {
         $fields = [];
-        $tableDescription = $this->tableDescriber->describe($table, $connection); // todo this is wrong, need connection in the constructor
+        $tableDescription = $this->tableDescriber->describe($table);
+        $connection = $this->tableDescriber->getConnection();
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = 'IFNULL(' . $column['name'] . ', "NULL9cf4-973a-4539-a5f2-8d4bde0aNULL")';
         }
 
+        $dbConnection = DB::connection($connection);
+        $dbConnection->statement('SET @crc := ""');
 
-        DB::statement('SET @crc := ""');
-
-        DB::statement(
+        $dbConnection->statement(
             'SELECT MIN(
                 (@crc := SHA1(CONCAT_WS(
                     "|", @crc, ' . implode(', ', $fields) . '
                 ))) IS NULL
             ) AS discard
-            FROM ' . DB::getTablePrefix() . $table . ' USE INDEX(PRIMARY)'
+            FROM ' . $dbConnection->getTablePrefix() . $table . ' USE INDEX(PRIMARY)'
         );
 
-        $result = DB::select('SELECT @crc AS crc');
+        $result = $dbConnection->select('SELECT @crc AS crc');
 
         return $result[0]->crc;
     }
