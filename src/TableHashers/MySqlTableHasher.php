@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync\TableHashers;
 
+use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 
@@ -22,27 +23,23 @@ class MySqlTableHasher implements TableHasherInterface
         $tableDescription = $this->tableDescriber->describe($table, $connection); // todo this is wrong, need connection in the constructor
 
         foreach ($tableDescription['columns'] as $column) {
-            $fields[] = $column['name'];
+            $fields[] = 'IFNULL(' . $column['name'] . ', "NULL9cf4-973a-4539-a5f2-8d4bde0aNULL")';
         }
 
 
-        dd(\Stickee\Sync\Models\SyncTest::count());
+        DB::statement('SET @crc := ""');
 
-        $db->query('SET @crc := ""');
-
-        $db->query(
+        DB::statement(
             'SELECT MIN(
                 (@crc := SHA1(CONCAT_WS(
-                    "#", @crc, ?
+                    "|", @crc, ' . implode(', ', $fields) . '
                 ))) IS NULL
             ) AS discard
-            FROM ? USE INDEX(PRIMARY)',
-            [$fields, $table],
-            [DB::PARAM_IDENTIFIER, DB::PARAM_IDENTIFIER]
+            FROM ' . DB::getTablePrefix() . $table . ' USE INDEX(PRIMARY)'
         );
 
-        $hash = $db->queryOne('SELECT @crc AS crc');
+        $result = DB::select('SELECT @crc AS crc');
 
-        return $hash['crc'];
+        return $result[0]->crc;
     }
 }

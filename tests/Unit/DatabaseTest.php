@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync\Test\Unit;
 
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
@@ -15,48 +16,17 @@ use Stickee\Sync\Test\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    use RefreshDatabase {
-        refreshDatabase as originalRefreshDatabase;
+    use DatabaseMigrations {
+        runDatabaseMigrations as originalRunDatabaseMigrations;
     }
 
-    /**
-     * Define hooks to migrate the database before and after each test.
-     *
-     * @return void
-     */
-    public function refreshDatabase()
+    public function runDatabaseMigrations()
     {
         $this->useSqlite();
-        $this->originalRefreshDatabase();
+        $this->originalRunDatabaseMigrations();
 
         $this->useMysql();
-        $this->originalRefreshDatabase();
-    }
-
-    /**
-     *
-     * @return void
-     */
-    public function test_table_describer_factory_sqlite()
-    {
-        $this->useSqlite();
-
-        $tableDescriber = app(TableDescriberInterface::class);
-
-        $this->assertEquals(SqliteTableDescriber::class, get_class($tableDescriber), 'Wrong class created for SQLite');
-    }
-
-    /**
-     *
-     * @return void
-     */
-    public function test_table_describer_factory_mysql()
-    {
-        $this->useMysql();
-
-        $tableDescriber = app(TableDescriberInterface::class);
-
-        $this->assertEquals(MySqlTableDescriber::class, get_class($tableDescriber), 'Wrong class created for MySQL');
+        $this->originalRunDatabaseMigrations();
     }
 
     /**
@@ -95,8 +65,23 @@ class DatabaseTest extends TestCase
 
         $tableHasher = app(TableHasherInterface::class);
         $hash = $tableHasher->hash('sync_tests');
-        dd($hash);
 
-        //$this->assertEquals(MySqlTableHasher::class, get_class($tableHasher), 'Wrong class created for MySQL');
+        $this->assertEquals(MySqlTableHasher::class, get_class($tableHasher), 'Wrong class created for MySQL');
+        $this->assertEquals('e541634bb163c99ee001c5d84bf1e9247ce775f4', $hash, 'Wrong hash for MySQL');
+    }
+
+    /**
+     *
+     * @return void
+     */
+    public function test_table_hasher_sqlite()
+    {
+        $this->useSqlite();
+
+        $tableHasher = app(TableHasherInterface::class);
+        $hash = $tableHasher->hash('sync_tests');
+
+        $this->assertEquals(SqliteTableHasher::class, get_class($tableHasher), 'Wrong class created for SQLite');
+        $this->assertEquals('e541634bb163c99ee001c5d84bf1e9247ce775f4', $hash, 'Wrong hash for SQLite');
     }
 }

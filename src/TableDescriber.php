@@ -1,6 +1,6 @@
 <?php
 
-namespace Stickee\Sync\TableDescribers;
+namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -8,7 +8,7 @@ use Stickee\Sync\Interfaces\TableDescriberInterface;
 
 /**
  */
-class SqliteTableDescriber implements TableDescriberInterface
+class TableDescriber implements TableDescriberInterface
 {
     public function __construct()
     {
@@ -21,14 +21,17 @@ class SqliteTableDescriber implements TableDescriberInterface
             throw new InvalidArgumentException('Table "' . $table . '" is not in sync.allowed_tables');
         }
 
-        $result = ['columns' => []];
-        $rows = DB::select('PRAGMA table_info(' . DB::getTablePrefix() . $table . ')');
+        $schema = DB::connection($connection)->getSchemaBuilder();
 
-        foreach ($rows as $row) {
+        $columns = $schema->getColumnListing($table);
+        $result = ['columns' => []];
+
+        foreach ($columns as $column) {
+            $type = $schema->getColumnType($table, $column);
+
             $result['columns'][] = [
-                'name' => $row->name,
-                'type' => $row->type, // TODO canonicalise?
-                'nullable' => $row->notnull !== '1',
+                'name' => $column,
+                'type' => $type,
             ];
         }
 

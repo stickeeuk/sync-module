@@ -11,6 +11,7 @@ use Stickee\Sync\ServiceProvider;
 abstract class TestCase extends Orchestra
 {
     protected $connectionsToTransact = ['test_mysql'];
+
     /**
      * Setup the test environment.
      */
@@ -19,7 +20,7 @@ abstract class TestCase extends Orchestra
         parent::setUp();
 
         \DB::listen(function($sql) {
-            dump($sql->connection->getName(), $sql->sql);
+            //dump($sql->connection->getName(), $sql->sql);
 
             if ($sql->bindings)
                 ;//dump($sql->bindings);
@@ -32,13 +33,15 @@ abstract class TestCase extends Orchestra
         $this->useSqlite();
         $this->setUpDatabase();
 
+        $faker->seed(1234);
+
         $this->useMysql();
         $this->setUpDatabase();
     }
 
     private function setUpDatabase()
     {
-        dump('Migrating ' . config('database.default'));
+        // dump('Migrating ' . config('database.default'));
         $this->loadLaravelMigrations();
         $this->artisan('migrate');
 

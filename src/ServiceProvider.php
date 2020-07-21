@@ -10,6 +10,7 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\Models\Affiliate;
 use Stickee\Sync\Models\Property;
 use Stickee\Sync\PropertyService;
+use Stickee\Sync\TableDescriber;
 use Stickee\Sync\TableHasherFactory;
 
 /**
@@ -26,9 +27,7 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__ . '/../config/sync.php', 'sync'
         );
 
-        $this->app->bind(TableDescriberInterface::class, function ($app, $arguments) {
-            return app(TableDescriberFactory::class)->create($arguments['connection'] ?? null);
-        });
+        $this->app->bind(TableDescriberInterface::class, TableDescriber::class);
 
         $this->app->bind(TableHasherInterface::class, function ($app, $arguments) {
             return app(TableHasherFactory::class)->create($arguments['connection'] ?? null);
