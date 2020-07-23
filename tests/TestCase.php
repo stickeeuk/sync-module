@@ -6,6 +6,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Orchestra\Testbench\TestCase as Orchestra;
+use PDO;
 use Stickee\Sync\Seeds\TestSeeder;
 use Stickee\Sync\ServiceProvider;
 
@@ -79,6 +80,11 @@ abstract class TestCase extends Orchestra
             'prefix'   => 'test_',
             'username'   => 'root',
             'password'   => '',
+            'options' => [
+                // SQLite always stringifies fetches, so set it on mysql
+                // so that the tests get the same data regardless of the DB
+                PDO::ATTR_STRINGIFY_FETCHES => true,
+            ],
         ]);
     }
 

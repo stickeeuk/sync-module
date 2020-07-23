@@ -3,8 +3,10 @@
 namespace Stickee\Sync;
 
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Stickee\Sync\Exceptions\PropertyNotFoundException;
+use Stickee\Sync\Http\Controllers\SyncController;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\Models\Affiliate;
@@ -50,5 +52,11 @@ class ServiceProvider extends BaseServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
 
         $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
+    }
+
+    public static function routes()
+    {
+        Route::get(config('sync.url') . '/getTable', '\\' . SyncController::class . '@getTable')->name('sync.getTable');
+
     }
 }

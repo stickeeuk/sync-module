@@ -31,7 +31,16 @@ return [
      | Tables that are allowed to be synchronised
      |--------------------------------------------------------------------------
      |
-     | A list of table names that can be synchronised
+     | A list of table names (or database.table) that can be synchronised
      */
     'allowed_tables' => ['sync_tests'],
+
+    /*
+     |--------------------------------------------------------------------------
+     | URL for API requests
+     |--------------------------------------------------------------------------
+     |
+     | The URL to register routes on for API requests
+     */
+    'url' => 'sync',
 ];
