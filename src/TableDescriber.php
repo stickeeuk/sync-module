@@ -13,18 +13,14 @@ class TableDescriber implements TableDescriberInterface
 {
     use ChecksTables;
 
-    private $connection;
-
-    public function __construct(?string $connection = null)
-    {
-        $this->connection = $connection ?: config('database.default');
-    }
-
     public function describe(string $table): array
     {
         $this->checkTable($table);
 
-        $schema = DB::connection($this->connection)->getSchemaBuilder();
+        $config = config('sync.tables');
+        $connection = $config['connection'] ?? config('database.default');
+
+        $schema = DB::connection($connection)->getSchemaBuilder();
 
         $columns = $schema->getColumnListing($table);
         $result = ['columns' => []];
@@ -39,10 +35,5 @@ class TableDescriber implements TableDescriberInterface
         }
 
         return $result;
-    }
-
-    public function getConnection(): ?string
-    {
-        return $this->connection;
     }
 }

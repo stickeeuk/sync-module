@@ -24,9 +24,10 @@ class MySqlTableHasher implements TableHasherInterface
     {
         $this->checkTable($table);
 
+        $config = config('sync.tables');
+        $connection = $config['connection'] ?? config('database.default');
         $fields = [];
         $tableDescription = $this->tableDescriber->describe($table);
-        $connection = $this->tableDescriber->getConnection();
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = 'IFNULL(' . $column['name'] . ', "NULL9cf4-973a-4539-a5f2-8d4bde0aNULL")';

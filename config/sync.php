@@ -19,21 +19,31 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | The API key
-     |--------------------------------------------------------------------------
-     |
-     | The key for the sync API
-     */
-    'api_key' => env('AFFILIATES_API_KEY'),
-
-    /*
-     |--------------------------------------------------------------------------
      | Tables that are allowed to be synchronised
      |--------------------------------------------------------------------------
      |
-     | A list of table names (or database.table) that can be synchronised
+     | A map of table names (or database.table) that can be synchronised to
+     | options for that table
+     | Options:
+     |  - (string) connection: The name of the database connection to use
+     |    (i.e. DB::connection($name)). Default: config(database.default)
+     |  - (string|array) primary: The column or array of columns that make up
+     |    the primary key. Default: "id"
+     |
+     | Example:
+     | [
+     |     'table_1' => [],
+     |     'table_2' => ['primary' => 'uuid'],
+     |     'table_3' => ['connection' => 'my_connection'],
+     |     'db_2.table_1' => [
+     |         'connection' => 'my_connection'
+     |         'primary' => ['type', 'code'],
+     |      ],
+     | ]
      */
-    'allowed_tables' => ['sync_tests'],
+    'tables' => [
+        'sync_tests' => [],
+    ],
 
     /*
      |--------------------------------------------------------------------------

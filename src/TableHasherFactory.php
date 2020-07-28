@@ -13,6 +13,7 @@ use Stickee\Sync\TableHashers\SqliteTableHasher;
  */
 class TableHasherFactory
 {
+    // TODO don't accept connection? use table instead?
     public function create(?string $connection = null): TableHasherInterface
     {
         $connection = $connection ?: config('database.default');
@@ -22,7 +23,7 @@ class TableHasherFactory
             throw new InvalidArgumentException('Invalid connection "' . $connection . '"');
         }
 
-        $tableDescriber = app()->makeWith(TableDescriberInterface::class, ['connection' => $connection]);
+        $tableDescriber = app(TableDescriberInterface::class);
 
         switch ($driver) {
             case 'mysql':

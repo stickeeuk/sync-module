@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class SyncRequest extends FormRequest
+class SyncTableRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class SyncRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::in(config('sync.allowed_tables')),
+                Rule::in(array_keys(config('sync.tables'))),
             ],
         ];
     }

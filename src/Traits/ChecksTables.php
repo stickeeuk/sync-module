@@ -10,8 +10,8 @@ trait ChecksTables
 {
     protected function checkTable(string $table)
     {
-        if (!in_array($table, config('sync.allowed_tables'))) {
-            throw new InvalidArgumentException('Table "' . $table . '" is not in sync.allowed_tables');
+        if (!in_array($table, array_keys(config('sync.tables')))) {
+            throw new InvalidArgumentException('Table "' . $table . '" is not in sync.tables');
         }
     }
 }

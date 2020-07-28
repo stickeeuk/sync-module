@@ -3,13 +3,14 @@
 namespace Stickee\Sync\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Stickee\Sync\Http\Requests\SyncRequest;
+use Stickee\Sync\Http\Requests\SyncFileRequest;
+use Stickee\Sync\Http\Requests\SyncTableRequest;
 use Stickee\Sync\TableExporter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SyncController extends Controller
 {
-    public function getTable(SyncRequest $request)
+    public function getTable(SyncTableRequest $request)
     {
         $tableExporter = app(TableExporter::class);
 
@@ -24,5 +25,10 @@ class SyncController extends Controller
                 'Content-Type' => 'application/octet-stream',
                 'Content-Disposition' => 'attachment; filename="' . $request->table . '.txt"',
             ]);
+    }
+
+    public function getFile(SyncFileRequest $request)
+    {
+
     }
 }

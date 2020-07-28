@@ -5,6 +5,7 @@ namespace Stickee\Sync;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Stickee\Sync\Commands\Sync;
 use Stickee\Sync\Exceptions\PropertyNotFoundException;
 use Stickee\Sync\Http\Controllers\SyncController;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
@@ -34,6 +35,8 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->bind(TableHasherInterface::class, function ($app, $arguments) {
             return app(TableHasherFactory::class)->create($arguments['connection'] ?? null);
         });
+
+        $this->commands([Sync::class]);
     }
 
     /**

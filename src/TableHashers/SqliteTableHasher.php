@@ -24,9 +24,10 @@ class SqliteTableHasher implements TableHasherInterface
     {
         $this->checkTable($table);
 
+        $config = config('sync.tables');
+        $connection = $config['connection'] ?? config('database.default');
         $fields = [];
         $tableDescription = $this->tableDescriber->describe($table);
-        $connection = $this->tableDescriber->getConnection();
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = $column['name'];
