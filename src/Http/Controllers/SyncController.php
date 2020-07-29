@@ -35,12 +35,10 @@ class SyncController extends Controller
             abort_if($hash === $request->hash, 304);
         }
 
-        $tableExporter = app(TableExporter::class);
-
         return new StreamedResponse(
-            function () use ($request, $tableExporter) {
+            function () use ($request, $syncService) {
                 $stream = fopen('php://output', 'w');
-                $tableExporter->export($stream, $request->config_name);
+                $syncService->exportTable($request->config_name, $stream);
                 fclose($stream);
             },
             200,

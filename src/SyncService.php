@@ -26,6 +26,12 @@ class SyncService
         return $tableHasher->hash($configName);
     }
 
+    public function exportTable(string $configName, $stream)
+    {
+        $tableExporter = app(TableExporter::class);
+        $tableExporter->export($stream, $configName);
+    }
+
     public function getFileHashes(string $configName)
     {
         $config = $this->getDirectoryInfo($configName);
