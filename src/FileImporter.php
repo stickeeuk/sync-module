@@ -1,0 +1,64 @@
+<?php
+
+namespace Stickee\Sync;
+
+use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
+use Stickee\Sync\Traits\ChecksDirectories;
+
+/**
+ */
+class FileImporter
+{
+    use ChecksDirectories;
+
+    public function import($stream, $callback): void
+    {
+        while (!feof($stream)) {
+            $packedSize = fread($stream, 4);
+
+            if ($packedSize === false) {
+                throw new Exception('fread error');
+            } elseif ($packedSize === '') {
+                break;
+            }
+
+            $metaSize = unpack('Nsize', $packedSize)['size'];
+            $metaJson = fread($stream, $metaSize);
+
+            if ($metaJson === false) {
+                throw new Exception('fread error');
+            }
+
+            $meta = json_decode($metaJson);
+            $data = fread($stream, $meta->size);
+
+            if ($data === false) {
+                throw new Exception('fread error');
+            }
+
+            $allMeta[] = $metaSize;
+            $allMeta[] = $metaJson;
+
+            call_user_func($callback, $meta, $data);
+        }
+    }
+
+    public function importToDirectory($stream, string $name): void
+    {
+        $config = config('sync.directories.' . $name);
+
+        if (!$config) {
+            throw new InvalidArgumentException('Unknown config sync.directories.' . $name);
+        }
+
+        $disk = Storage::disk($config['disk']);
+
+        $callback = function ($meta, $data) use ($disk) {
+            // TODO what happens if path is ../../../../.....
+            $disk->put($meta->path, $data);
+        };
+
+        $this->import($stream, $callback);
+    }
+}

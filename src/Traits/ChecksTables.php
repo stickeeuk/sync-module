@@ -10,7 +10,7 @@ trait ChecksTables
 {
     protected function checkTable(string $table)
     {
-        if (!in_array($table, array_keys(config('sync.tables')))) {
+        if (!isset(config('sync.tables')[$table])) {
             throw new InvalidArgumentException('Table "' . $table . '" is not in sync.tables');
         }
     }

@@ -25,6 +25,9 @@ class FileExporterTest extends TestCase
 
         fseek($stream, 0);
 
+        // Use this to update test-stream.bin. Don't forget to delete the file first.
+        // $disk->put('test-stream.bin', fread($stream, 999999)); die('File updated');
+
         while (!feof($stream)) {
             $packedSize = fread($stream, 4);
 
@@ -58,13 +61,16 @@ class FileExporterTest extends TestCase
 
         $expected = [
             28,
-            '{"file":"0.png","size":9370}',
+            '{"file":"0.png","size":4340}',
             32,
-            '{"file":"1\\/1a.png","size":9370}',
+            '{"file":"1\\/1a.png","size":4340}',
             32,
-            '{"file":"1\\/1b.png","size":9370}',
+            '{"file":"1\\/1b.png","size":3077}',
             34,
-            '{"file":"1\\/2\\/2.png","size":9370}',
+            '{"file":"1\\/2\\/2.png","size":4340}',
+            39,
+            '{"file":"test-stream.bin","size":16239}',
+
         ];
 
 

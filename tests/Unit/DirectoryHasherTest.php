@@ -22,6 +22,7 @@ class DirectoryHasherTest extends TestCase
             '1/1a.png' => '',
             '1/1b.png' => '',
             '1/2/2.png' => '',
+            'test-stream.bin' => '',
         ];
 
         $this->assertEquals($expected, $hashes, 'Wrong result for hashed directory');
@@ -37,10 +38,11 @@ class DirectoryHasherTest extends TestCase
         $hashes = $directoryHasher->hash('/');
 
         $expected = [
-            '0.png' => '0094744589fe5af7231dead555afceaf',
-            '1/1a.png' => '0094744589fe5af7231dead555afceaf',
-            '1/1b.png' => '0094744589fe5af7231dead555afceaf',
-            '1/2/2.png' => '0094744589fe5af7231dead555afceaf',
+            '0.png' => '49d1e469707577ed310e09f89b0848bf',
+            '1/1a.png' => '49d1e469707577ed310e09f89b0848bf',
+            '1/1b.png' => 'd7eba7679f8c0dd80d1689cdda97b9d7',
+            '1/2/2.png' => '49d1e469707577ed310e09f89b0848bf',
+            'test-stream.bin' => '4bfee0d8db02fdb73bb2d154ed159459',
         ];
 
         $this->assertEquals($expected, $hashes, 'Wrong result for hashed directory');
