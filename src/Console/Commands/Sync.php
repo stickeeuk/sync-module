@@ -12,7 +12,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'sync:tables {table?}';
+    protected $signature = 'sync:tables {configName?}';
 
     /**
      * The console command description.
@@ -26,13 +26,15 @@ class Sync extends Command
      */
     public function handle(): void
     {
-        $tables = $this->argument('table')
-            ? [$this->argument('table')]
-            : array_keys(config('sync.tables'));
+        // TODO
+        // $table = $config['table'] ?? $configName;
+        // $tables = $this->argument('table')
+        //     ? [$this->argument('table')]
+        //     : array_keys(config('sync.tables'));
 
-        DB::transaction(function () use ($tables) {
-            // TODO
-            dump($tables);
-        });
+        // DB::transaction(function () use ($tables) {
+        //     // TODO
+        //     dump($tables);
+        // });
     }
 }

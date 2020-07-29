@@ -5,28 +5,25 @@ namespace Stickee\Sync;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
-use Stickee\Sync\Traits\ChecksTables;
+use Stickee\Sync\Traits\UsesTables;
 
 /**
  */
 class TableDescriber implements TableDescriberInterface
 {
-    use ChecksTables;
+    use UsesTables;
 
-    public function describe(string $table): array
+    public function describe(string $configName): array
     {
-        $this->checkTable($table);
+        $config = $this->getTableInfo($configName);
 
-        $config = config('sync.tables');
-        $connection = $config['connection'] ?? config('database.default');
+        $schema = DB::connection($config['connection'])->getSchemaBuilder();
 
-        $schema = DB::connection($connection)->getSchemaBuilder();
-
-        $columns = $schema->getColumnListing($table);
+        $columns = $schema->getColumnListing($config['table']);
         $result = ['columns' => []];
 
         foreach ($columns as $column) {
-            $type = $schema->getColumnType($table, $column);
+            $type = $schema->getColumnType($config['table'], $column);
 
             $result['columns'][] = [
                 'name' => $column,

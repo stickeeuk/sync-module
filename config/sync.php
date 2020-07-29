@@ -22,12 +22,13 @@ return [
      |    (i.e. DB::connection($name)). Default: config(database.default)
      |  - (string|array) primary: The column or array of columns that make up
      |    the primary key. Default: "id"
+     |  - (string) tableName: The table name, if different to the key
      |
      | Example:
      | [
      |     'table_1' => [],
      |     'table_2' => ['primary' => 'uuid'],
-     |     'table_3' => ['connection' => 'my_connection'],
+     |     'table_2_on_my_connection' => ['connection' => 'my_connection', 'table' => 'table_2'],
      |     'db_2.table_1' => [
      |         'connection' => 'my_connection'
      |         'primary' => ['type', 'code'],

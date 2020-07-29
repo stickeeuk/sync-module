@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class SyncTableRequest extends FormRequest
+class GetTableRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class SyncTableRequest extends FormRequest
     public function rules()
     {
         return [
-            'table' => [
+            'config_name' => [
                 'required',
                 'string',
                 'max:255',
@@ -45,7 +45,7 @@ class SyncTableRequest extends FormRequest
     public function messages()
     {
         return [
-            'table.in' => 'Table name not in allowed list',
+            'config_name.in' => 'Table name not in allowed list',
         ];
     }
 

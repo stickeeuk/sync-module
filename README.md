@@ -16,7 +16,7 @@ The module can be manually registered by adding this to the `providers` array in
 Stickee\Sync\ServiceProvider::class,
 ```
 
-# Usage for Websites
+## Usage for Websites
 
 Add the routes to your routes/api.php. You will usually want to add some form of authentication, like this:
 ```
@@ -43,3 +43,30 @@ The easiest way to make changes is to make the project you're importing the modu
 3. `composer require stickee/sync`
 
 **NOTE:** Do not check in your `composer.json` like this!
+
+### Database tables
+
+Method 1:
+ - Client hashes its local copy of the table
+ - Client sends a getTableHash request to the server
+ - If the hashes are the same, there is nothing to do so stop
+ - Client sends a getTable request
+ - Client imports the response, which is merged in to the existing table
+
+Method 2:
+ - Client hashes its local copy of the table
+ - Client sends a getTable request to the server, including the hash
+ - If the hashes are the same, there server will respond 304 Not Modified
+ - Client imports the response, which is merged in to the existing table
+
+Tables can be hashed using a class that implements \Stickee\Sync\Interfaces\TableHasherInterface
+
+### Files
+
+ - Client hashes its local copy of the files
+ - Client sends a getFileHashes request to the server
+ - Client compares the hashes and builds a list of files it needs to delete / download
+ - Client deletes extraneous files
+ - Client splits the list of files to fetch into chunks
+ - For each chunk, the client sends a getFiles request
+ - Files are saved to the disk

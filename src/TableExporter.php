@@ -3,28 +3,24 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\DB;
-use Stickee\Sync\Traits\ChecksTables;
+use Stickee\Sync\Traits\UsesTables;
 
 /**
  */
 class TableExporter
 {
-    use ChecksTables;
+    use UsesTables;
 
     public $chunkSize = 1000;
 
-    public function export($stream, string $table): void
+    public function export($stream, string $configName): void
     {
-        $this->checkTable($table);
+        $config = $this->getTableInfo($configName);
 
-        $config = config('sync.tables');
-        $primary = $config['primary'] ?? ['id'];
-        $connection = $config['connection'] ?? config('database.default');
+        $query = DB::connection($config['connection'])
+            ->table($config['table']);
 
-        $query = DB::connection($connection)
-            ->table($table);
-
-        foreach ($primary as $key) {
+        foreach ($config['primary'] as $key) {
             $query->orderBy($key);
         }
 

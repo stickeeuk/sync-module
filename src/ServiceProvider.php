@@ -59,7 +59,9 @@ class ServiceProvider extends BaseServiceProvider
 
     public static function routes()
     {
+        Route::post(config('sync.url') . '/getTableHash', '\\' . SyncController::class . '@getTableHash')->name('sync.getTableHash');
         Route::post(config('sync.url') . '/getTable', '\\' . SyncController::class . '@getTable')->name('sync.getTable');
+        Route::post(config('sync.url') . '/getFileHashes', '\\' . SyncController::class . '@getFileHashes')->name('sync.getFileHashes');
         Route::post(config('sync.url') . '/getFiles', '\\' . SyncController::class . '@getFiles')->name('sync.getFiles');
     }
 }

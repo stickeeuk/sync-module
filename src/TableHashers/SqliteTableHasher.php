@@ -5,13 +5,13 @@ namespace Stickee\Sync\TableHashers;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
-use Stickee\Sync\Traits\ChecksTables;
+use Stickee\Sync\Traits\UsesTables;
 
 /**
  */
 class SqliteTableHasher implements TableHasherInterface
 {
-    use ChecksTables;
+    use UsesTables;
 
     private $tableDescriber;
 
@@ -20,14 +20,12 @@ class SqliteTableHasher implements TableHasherInterface
         $this->tableDescriber = $tableDescriber;
     }
 
-    public function hash(string $table): string
+    public function hash(string $configName): string
     {
-        $this->checkTable($table);
+        $config = $this->getTableInfo($configName);
 
-        $config = config('sync.tables');
-        $connection = $config['connection'] ?? config('database.default');
         $fields = [];
-        $tableDescription = $this->tableDescriber->describe($table);
+        $tableDescription = $this->tableDescriber->describe($configName);
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = $column['name'];
@@ -35,8 +33,8 @@ class SqliteTableHasher implements TableHasherInterface
 
         $hash = '';
 
-        DB::connection($connection)
-            ->table($table)
+        DB::connection($config['connection'])
+            ->table($config['table'])
             ->select($fields)
             ->orderBy('rowid')
             ->chunk(1000, function ($rows) use (&$hash) {

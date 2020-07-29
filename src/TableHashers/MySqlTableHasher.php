@@ -5,13 +5,13 @@ namespace Stickee\Sync\TableHashers;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
-use Stickee\Sync\Traits\ChecksTables;
+use Stickee\Sync\Traits\UsesTables;
 
 /**
  */
 class MySqlTableHasher implements TableHasherInterface
 {
-    use ChecksTables;
+    use UsesTables;
 
     private $tableDescriber;
 
@@ -20,20 +20,17 @@ class MySqlTableHasher implements TableHasherInterface
         $this->tableDescriber = $tableDescriber;
     }
 
-    public function hash(string $table): string
+    public function hash(string $configName): string
     {
-        $this->checkTable($table);
-
-        $config = config('sync.tables');
-        $connection = $config['connection'] ?? config('database.default');
+        $config = $this->getTableInfo($configName);
         $fields = [];
-        $tableDescription = $this->tableDescriber->describe($table);
+        $tableDescription = $this->tableDescriber->describe($configName);
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = 'IFNULL(' . $column['name'] . ', "NULL9cf4-973a-4539-a5f2-8d4bde0aNULL")';
         }
 
-        $dbConnection = DB::connection($connection);
+        $dbConnection = DB::connection($config['connection']);
         $dbConnection->statement('SET @crc := ""');
 
         $dbConnection->statement(
@@ -42,7 +39,7 @@ class MySqlTableHasher implements TableHasherInterface
                     "|", @crc, ' . implode(', ', $fields) . '
                 ))) IS NULL
             ) AS discard
-            FROM ' . $dbConnection->getTablePrefix() . $table . ' USE INDEX(PRIMARY)'
+            FROM ' . $dbConnection->getTablePrefix() . $config['table'] . ' USE INDEX(PRIMARY)'
         );
 
         $result = $dbConnection->select('SELECT @crc AS crc');

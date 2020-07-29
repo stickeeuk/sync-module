@@ -32,6 +32,8 @@ abstract class TestCase extends Orchestra
     {
         parent::setUp();
 
+        ServiceProvider::routes();
+
         $faker = Factory::create();
         $faker->seed(1234);
 

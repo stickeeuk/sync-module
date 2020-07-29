@@ -4,5 +4,5 @@ namespace Stickee\Sync\Interfaces;
 
 interface TableHasherInterface
 {
-    function hash(string $table): string;
+    function hash(string $configName): string;
 }

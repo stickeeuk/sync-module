@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Test\TestCase;
 
-class ApiTest extends TestCase
+class TablesApiTest extends TestCase
 {
     use DatabaseMigrations {
         runDatabaseMigrations as originalRunDatabaseMigrations;
@@ -22,13 +22,33 @@ class ApiTest extends TestCase
      *
      * @return void
      */
+    public function test_get_table_hash()
+    {
+        $this->useSqlite();
+
+        $response = $this->json('POST', '/sync/getTableHash', ['config_name' => 'sync_tests']);
+
+        if ($response->getStatusCode() !== 200) {
+            dump($response->getBondy()->getContent());
+        }
+
+        $expected = [
+            'hash' => 'e022fe6a4e3352603ce26d4c13792f431ab21282',
+        ];
+
+        $response->assertOk();
+        $response->assertJson($expected);
+    }
+
+    /**
+     *
+     * @return void
+     */
     public function test_get_table()
     {
         $this->useSqlite();
 
-        ServiceProvider::routes();
-
-        $response = $this->json('POST', '/sync/getTable', ['table' => 'sync_tests']);
+        $response = $this->json('POST', '/sync/getTable', ['config_name' => 'sync_tests']);
 
         // $response is a StreamedResponse so we can't use getContent()
         ob_start();
