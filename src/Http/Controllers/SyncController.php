@@ -50,26 +50,19 @@ class SyncController extends Controller
             ]);
     }
 
-    public function getFileHashes(GetFileHashesRequest $request)
+    public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService)
     {
-        $config = $this->getDirectoryInfo($request->config_name);
-
-        $directoryHasher = app($config['hasher']);
-
         return [
-            'hashes' => $directoryHasher->hash($request->config_name),
+            'hashes' => $syncService->getFileHashes($request->config_name),
         ];
     }
 
-    public function getFiles(GetFilesRequest $request)
+    public function getFiles(GetFilesRequest $request, SyncService $syncService)
     {
-        $config = $this->getDirectoryInfo($request->config_name);
-        $fileExporter = app(FileExporter::class);
-
         return new StreamedResponse(
-            function () use ($request, $fileExporter) {
+            function () use ($request, $syncService) {
                 $stream = fopen('php://output', 'w');
-                $fileExporter->export($stream, $request->config_name, $request->input('files'));
+                $syncService->exportFiles($request->config_name, $request->input('files'), $stream);
                 fclose($stream);
             },
             200,
