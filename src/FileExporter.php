@@ -14,8 +14,6 @@ class FileExporter
 
     public function export($stream, string $configName, array $files): void
     {
-        // TODO check path of each file
-
         $config = $this->getDirectoryInfo($configName);
 
         // Export a stream in the format

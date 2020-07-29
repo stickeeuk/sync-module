@@ -51,7 +51,6 @@ class FileImporter
         $disk = Storage::disk($config['disk']);
 
         $callback = function ($meta, $data) use ($disk) {
-            // TODO what happens if path is ../../../../.....
             $disk->put($meta->path, $data);
         };
 

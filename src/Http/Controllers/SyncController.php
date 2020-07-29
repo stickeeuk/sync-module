@@ -9,6 +9,7 @@ use Stickee\Sync\Http\Requests\GetFilesRequest;
 use Stickee\Sync\Http\Requests\GetTableHashRequest;
 use Stickee\Sync\Http\Requests\GetTableRequest;
 use Stickee\Sync\Interfaces\TableHasherInterface;
+use Stickee\Sync\SyncService;
 use Stickee\Sync\TableExporter;
 use Stickee\Sync\Traits\UsesDirectories;
 use Stickee\Sync\Traits\UsesTables;
@@ -19,21 +20,21 @@ class SyncController extends Controller
     use UsesTables;
     use UsesDirectories;
 
-    public function getTableHash(GetTableHashRequest $request)
+    public function getTableHash(GetTableHashRequest $request, SyncService $syncService)
     {
-        $config = $this->getTableInfo($request->config_name);
-
-        $tableHasher = app()
-            ->makeWith(TableHasherInterface::class, ['connection' => $config['connection']]);
-
         return [
-            'hash' => $tableHasher->hash($config['table']),
+            'hash' => $syncService->getTableHash($request->config_name),
         ];
     }
 
-    public function getTable(GetTableRequest $request)
+    public function getTable(GetTableRequest $request, SyncService $syncService)
     {
-        // TODO id the hash is specified, check it and return 304 if equal
+        if ($request->hash) {
+            $hash = $syncService->getTableHash($request->config_name);
+
+            abort_if($hash === $request->hash, 304);
+        }
+
         $tableExporter = app(TableExporter::class);
 
         return new StreamedResponse(
