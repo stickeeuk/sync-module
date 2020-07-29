@@ -33,6 +33,7 @@ class SyncTableRequest extends FormRequest
                 'max:255',
                 Rule::in(array_keys(config('sync.tables'))),
             ],
+            'hash' => 'sometimes|string|max:255',
         ];
     }
 

@@ -5,7 +5,7 @@ namespace Stickee\Sync;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Stickee\Sync\Commands\Sync;
+use Stickee\Sync\Console\Commands\Sync;
 use Stickee\Sync\Exceptions\PropertyNotFoundException;
 use Stickee\Sync\Http\Controllers\SyncController;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
@@ -59,7 +59,7 @@ class ServiceProvider extends BaseServiceProvider
 
     public static function routes()
     {
-        Route::get(config('sync.url') . '/getTable', '\\' . SyncController::class . '@getTable')->name('sync.getTable');
-
+        Route::post(config('sync.url') . '/getTable', '\\' . SyncController::class . '@getTable')->name('sync.getTable');
+        Route::post(config('sync.url') . '/getFiles', '\\' . SyncController::class . '@getFiles')->name('sync.getFiles');
     }
 }

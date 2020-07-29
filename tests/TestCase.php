@@ -86,6 +86,17 @@ abstract class TestCase extends Orchestra
                 PDO::ATTR_STRINGIFY_FETCHES => true,
             ],
         ]);
+
+        $app['config']->set('sync.tables', ['sync_tests' => []]);
+        $app['config']->set('filesystems.disks.sync_test', [
+            'driver' => 'local',
+            'root' => __DIR__ . '/../test-data',
+        ]);
+        $app['config']->set('sync.directories', [
+            'sync_test' => [
+                'disk' => 'sync_test',
+            ],
+        ]);
     }
 
     /**

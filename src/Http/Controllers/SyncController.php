@@ -27,7 +27,7 @@ class SyncController extends Controller
             ]);
     }
 
-    public function getFile(SyncFileRequest $request)
+    public function getFiles(SyncFileRequest $request)
     {
 
     }

@@ -35,6 +35,7 @@ class TableExporterTest extends TestCase
 
         fseek($stream, 0);
         $data = stream_get_contents($stream);
+        fclose($stream);
 
         $expected = '{"id":"1","test_1":"49766366","test_2":"Amet iste laborum eius est dolor dolores.","test_3":null}' . "\n"
             . '{"id":"2","test_1":"1506369","test_2":"Quibusdam sed vel a quo sed fugit facilis.","test_3":null}' . "\n"

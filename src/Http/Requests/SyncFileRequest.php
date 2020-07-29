@@ -38,6 +38,16 @@ class SyncFileRequest extends FormRequest
     public function messages()
     {
         return [
+            'file' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    // TODO
+                    // Storage::disk($disk)->exists($value);
+                    //$fail($attribute . ' is invalid.');
+                },
+            ],
+            'hash' => 'sometimes|string|max:255',
         ];
     }
 

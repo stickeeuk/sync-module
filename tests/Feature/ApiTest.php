@@ -28,7 +28,7 @@ class ApiTest extends TestCase
 
         ServiceProvider::routes();
 
-        $response = $this->json('GET', '/sync/getTable', ['table' => 'sync_tests']);
+        $response = $this->json('POST', '/sync/getTable', ['table' => 'sync_tests']);
 
         // $response is a StreamedResponse so we can't use getContent()
         ob_start();

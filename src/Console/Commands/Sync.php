@@ -1,6 +1,6 @@
 <?php
 
-namespace Stickee\Sync\Commands;
+namespace Stickee\Sync\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
