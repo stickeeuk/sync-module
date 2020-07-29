@@ -4,13 +4,13 @@ namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
-use Stickee\Sync\Traits\ChecksDirectories;
+use Stickee\Sync\Traits\UsesDirectories;
 
 /**
  */
 class FileImporter
 {
-    use ChecksDirectories;
+    use UsesDirectories;
 
     public function import($stream, $callback): void
     {
@@ -44,13 +44,9 @@ class FileImporter
         }
     }
 
-    public function importToDirectory($stream, string $name): void
+    public function importToDirectory($stream, string $configName): void
     {
-        $config = config('sync.directories.' . $name);
-
-        if (!$config) {
-            throw new InvalidArgumentException('Unknown config sync.directories.' . $name);
-        }
+        $config = $this->getDirectoryInfo($configName);
 
         $disk = Storage::disk($config['disk']);
 

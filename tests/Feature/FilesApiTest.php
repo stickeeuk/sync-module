@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync\Test\Feature;
 
+use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Test\TestCase;
 
@@ -11,33 +12,55 @@ class FilesApiTest extends TestCase
      *
      * @return void
      */
-    // public function test_get_table()
-    // {
-    //     ServiceProvider::routes();
+    public function test_get_hashes()
+    {
+        $response = $this->json('POST', '/sync/getFileHashes', ['config_name' => 'sync_test']);
 
-    //     $response = $this->json('POST', '/sync/getTable', ['config_name' => 'sync_tests']);
+        if ($response->getStatusCode() !== 200) {
+            dump($response->getOriginalContent());
+        }
 
-    //     // $response is a StreamedResponse so we can't use getContent()
-    //     ob_start();
-    //     $response->send();
-    //     $body = ob_get_clean();
+        $expected = [
+            'hashes' => [
+                '0.png' => '49d1e469707577ed310e09f89b0848bf',
+                '1/1a.png' => '49d1e469707577ed310e09f89b0848bf',
+                '1/1b.png' => 'd7eba7679f8c0dd80d1689cdda97b9d7',
+                '1/2/2.png' => '49d1e469707577ed310e09f89b0848bf',
+                'test-stream.bin' => '4bfee0d8db02fdb73bb2d154ed159459',
+            ]
+        ];
 
-    //     if ($response->getStatusCode() !== 200) {
-    //         dump($body);
-    //     }
+        $response->assertOk();
+        $response->assertJson($expected);
+    }
 
-    //     $expected = '{"id":"1","test_1":"49766366","test_2":"Amet iste laborum eius est dolor dolores.","test_3":null}' . "\n"
-    //         . '{"id":"2","test_1":"1506369","test_2":"Quibusdam sed vel a quo sed fugit facilis.","test_3":null}' . "\n"
-    //         . '{"id":"3","test_1":"4","test_2":"Ipsam sit veniam sed fuga aspernatur natus.","test_3":null}' . "\n"
-    //         . '{"id":"4","test_1":"503083165","test_2":"Perferendis voluptatibus incidunt nostrum quia possimus.","test_3":null}' . "\n"
-    //         . '{"id":"5","test_1":"738286","test_2":"Necessitatibus architecto aut consequatur debitis et id.","test_3":null}' . "\n"
-    //         . '{"id":"6","test_1":"4527","test_2":"Totam temporibus quia ipsam ut iusto iusto.","test_3":null}' . "\n"
-    //         . '{"id":"7","test_1":"43503859","test_2":"Accusantium et a qui ducimus nihil laudantium.","test_3":null}' . "\n"
-    //         . '{"id":"8","test_1":"3764722","test_2":"Cum molestiae vel natus ex dicta hic inventore.","test_3":null}' . "\n"
-    //         . '{"id":"9","test_1":"819253609","test_2":"Quae non quia dicta in aut provident.","test_3":null}' . "\n"
-    //         . '{"id":"10","test_1":"9589","test_2":"Dignissimos error sit labore quos.","test_3":null}' . "\n";
+    /**
+     *
+     * @return void
+     */
+    public function test_get_files()
+    {
+        $disk = Storage::disk(config('sync.directories.sync_test.disk'));
+        $expected = $disk->read('test-stream.bin');
+        $files = [
+            '0.png',
+            '1/1a.png',
+            '1/1b.png',
+            '1/2/2.png',
+        ];
 
-    //     $response->assertOk();
-    //     $this->assertEquals($expected, gzdecode($body), 'Wrong data returned');
-    // }
+        $response = $this->post('/sync/getFiles', ['config_name' => 'sync_test', 'files' => $files]);
+
+        // $response is a StreamedResponse so we can't use getContent()
+        ob_start();
+        $response->send();
+        $body = ob_get_clean();
+
+        if ($response->getStatusCode() !== 200) {
+            dump($body);
+        }
+
+        $response->assertOk();
+        $this->assertEquals($expected, $body, 'Wrong data returned');
+    }
 }

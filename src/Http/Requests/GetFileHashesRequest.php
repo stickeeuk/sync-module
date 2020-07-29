@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class GetTableHashRequest extends FormRequest
+class GetFileHashesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,8 +30,7 @@ class GetTableHashRequest extends FormRequest
             'config_name' => [
                 'required',
                 'string',
-                'max:255',
-                Rule::in(array_keys(config('sync.tables'))),
+                Rule::in(array_keys(config('sync.directories'))),
             ],
         ];
     }
@@ -44,7 +43,7 @@ class GetTableHashRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Config name not in sync.tables',
+            'config_name.in' => 'Config name not in sync.directories',
         ];
     }
 

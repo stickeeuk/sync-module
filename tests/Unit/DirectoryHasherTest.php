@@ -15,7 +15,7 @@ class DirectoryHasherTest extends TestCase
     public function test_null_directory_hasher()
     {
         $directoryHasher = app(NullDirectoryHasher::class);
-        $hashes = $directoryHasher->hash('/');
+        $hashes = $directoryHasher->hash('sync_test');
 
         $expected = [
             '0.png' => '',
@@ -35,7 +35,7 @@ class DirectoryHasherTest extends TestCase
     public function test_md5_directory_hasher()
     {
         $directoryHasher = app(Md5DirectoryHasher::class);
-        $hashes = $directoryHasher->hash('/');
+        $hashes = $directoryHasher->hash('sync_test');
 
         $expected = [
             '0.png' => '49d1e469707577ed310e09f89b0848bf',

@@ -5,23 +5,21 @@ namespace Stickee\Sync\DirectoryHashers;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Adapter\Local;
 use Stickee\Sync\Interfaces\DirectoryHasherInterface;
-use Stickee\Sync\Traits\ChecksDirectories;
+use Stickee\Sync\Traits\UsesDirectories;
 
 /**
  */
 class Md5DirectoryHasher implements DirectoryHasherInterface
 {
-    use ChecksDirectories;
+    use UsesDirectories;
 
-    public function hash(string $directory): array
+    public function hash(string $configName): array
     {
-        $this->checkDirectory($directory);
+        $config = $this->getDirectoryInfo($configName);
 
-        $diskName = 'sync_test'; // todo
-        $disk = Storage::disk($diskName);
-        $driver = $disk->getDriver();
-        $isLocal = $driver->getAdapter() instanceof Local;
-        $files = $disk->allFiles($directory);
+        $disk = Storage::disk($config['disk']);
+        $isLocal = $disk->getDriver()->getAdapter() instanceof Local;
+        $files = $disk->allFiles('');
         $result = [];
         $path = $disk->path('');
 

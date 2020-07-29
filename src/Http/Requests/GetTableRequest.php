@@ -45,7 +45,7 @@ class GetTableRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Table name not in allowed list',
+            'config_name.in' => 'Config name not in sync.tables',
         ];
     }
 

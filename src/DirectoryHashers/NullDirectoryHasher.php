@@ -4,21 +4,20 @@ namespace Stickee\Sync\DirectoryHashers;
 
 use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\Interfaces\DirectoryHasherInterface;
-use Stickee\Sync\Traits\ChecksDirectories;
+use Stickee\Sync\Traits\UsesDirectories;
 
 /**
  */
 class NullDirectoryHasher implements DirectoryHasherInterface
 {
-    use ChecksDirectories;
+    use UsesDirectories;
 
-    public function hash(string $directory): array
+    public function hash(string $configName): array
     {
-        $this->checkDirectory($directory);
+        $config = $this->getDirectoryInfo($configName);
 
-        $disk = 'sync_test'; // todo
-
-        $files = Storage::disk($disk)->allFiles($directory);
+        $disk = Storage::disk($config['disk']);
+        $files = $disk->allFiles('');
         $result = [];
 
         foreach ($files as $file) {

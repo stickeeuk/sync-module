@@ -29,7 +29,7 @@ class TablesApiTest extends TestCase
         $response = $this->json('POST', '/sync/getTableHash', ['config_name' => 'sync_tests']);
 
         if ($response->getStatusCode() !== 200) {
-            dump($response->getBondy()->getContent());
+            dump($response->getOriginalContent());
         }
 
         $expected = [

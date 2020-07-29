@@ -4,25 +4,19 @@ namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
-use Stickee\Sync\Traits\ChecksDirectories;
+use Stickee\Sync\Traits\UsesDirectories;
 
 /**
  */
 class FileExporter
 {
-    use ChecksDirectories;
+    use UsesDirectories;
 
-    public function export($stream, string $name, array $files): void
+    public function export($stream, string $configName, array $files): void
     {
-        // TODO check path
+        // TODO check path of each file
 
-        $config = config('sync.directories.' . $name);
-
-        if (!$config) {
-            throw new InvalidArgumentException('Unknown config sync.directories.' . $name);
-        }
-
-        //return Storage::disk($disk)->download($path);
+        $config = $this->getDirectoryInfo($configName);
 
         // Export a stream in the format
         // 1. Metadata size (32 bits)

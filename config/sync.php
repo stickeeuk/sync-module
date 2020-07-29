@@ -48,6 +48,15 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Defaul file hasher
+     |--------------------------------------------------------------------------
+     |
+     | The default file hasher class
+     */
+    'default_file_hasher' => \Stickee\Sync\DirectoryHashers\Md5DirectoryHasher::class,
+
+    /*
+     |--------------------------------------------------------------------------
      | Directories that are allowed to be synchronised
      |--------------------------------------------------------------------------
      |
@@ -55,7 +64,7 @@ return [
      | Options:
      |  - (string) disk: The disk to read from (server) or write to (client). Required
      |  - (string) hasher: The \Stickee\Sync\Interfaces\DirectoryHasherInterface class
-     |    to use. Default \Stickee\Sync\DirectoryHashers\Md5DirectoryHasher
+     |    to use. Default: config('sync.default_file_hasher')
      */
     'directories' => [],
 ];

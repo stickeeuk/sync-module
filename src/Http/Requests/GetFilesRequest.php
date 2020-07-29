@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class SyncFileRequest extends FormRequest
+class GetFilesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,13 @@ class SyncFileRequest extends FormRequest
     public function rules()
     {
         return [
+            'config_name' => [
+                'required',
+                'string',
+                Rule::in(array_keys(config('sync.directories'))),
+            ],
+            'files' => 'required|array',
+            'files.*' => 'required|string',
         ];
     }
 
@@ -38,16 +45,7 @@ class SyncFileRequest extends FormRequest
     public function messages()
     {
         return [
-            'file' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    // TODO
-                    // Storage::disk($disk)->exists($value);
-                    //$fail($attribute . ' is invalid.');
-                },
-            ],
-            'hash' => 'sometimes|string|max:255',
+            'config_name.in' => 'Config name not in sync.directories',
         ];
     }
 
