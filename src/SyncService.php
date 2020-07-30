@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync;
 
+use Illuminate\Support\Collection;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 use Stickee\Sync\Traits\UsesTables;
@@ -32,13 +33,13 @@ class SyncService
         $tableExporter->export($stream, $configName);
     }
 
-    public function getFileHashes(string $configName)
+    public function getFileHashes(string $configName): Collection
     {
         $config = $this->getDirectoryInfo($configName);
 
         $directoryHasher = app($config['hasher']);
 
-        return $directoryHasher->hash($configName);
+        return collect($directoryHasher->hash($configName));
     }
 
     public function exportFiles(string $configName, array $files, $stream)

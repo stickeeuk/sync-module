@@ -70,3 +70,10 @@ Tables can be hashed using a class that implements \Stickee\Sync\Interfaces\Tabl
  - Client splits the list of files to fetch into chunks
  - For each chunk, the client sends a getFiles request
  - Files are saved to the disk
+
+// TODO
+client side
+ - service
+ - import table
+refactor hashers/exporters to not read from config?
+docblocks

@@ -51,7 +51,7 @@ class FileImporter
         $disk = Storage::disk($config['disk']);
 
         $callback = function ($meta, $data) use ($disk) {
-            $disk->put($meta->path, $data);
+            $disk->put($meta->file, $data);
         };
 
         $this->import($stream, $callback);

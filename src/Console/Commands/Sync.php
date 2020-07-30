@@ -4,6 +4,7 @@ namespace Stickee\Sync\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Stickee\Sync\Client;
 
 class Sync extends Command
 {
@@ -12,20 +13,23 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'sync:tables {configName?}';
+    protected $signature = 'sync';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Synchronise tables';
+    protected $description = 'Synchronise tables / files';
 
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
+        $client = app(Client::class);
+        $client->sync();
+
         // TODO
         // $table = $config['table'] ?? $configName;
         // $tables = $this->argument('table')

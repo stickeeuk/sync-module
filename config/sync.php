@@ -6,7 +6,7 @@ return [
      | API URL
      |--------------------------------------------------------------------------
      |
-     | The sync API URL for clients to connect to
+     | The sync API URL for clients to connect to, e.g. http://example.com/api/sync
      */
     'api_url' => env('SYNC_API_URL'),
 
@@ -39,16 +39,16 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | URL for API requests
+     | Slug for API requests
      |--------------------------------------------------------------------------
      |
-     | The URL to register routes on for API requests
+     | The slug to register routes on for API requests
      */
-    'url' => 'sync',
+    'slug' => 'sync',
 
     /*
      |--------------------------------------------------------------------------
-     | Defaul file hasher
+     | Default file hasher
      |--------------------------------------------------------------------------
      |
      | The default file hasher class
@@ -67,4 +67,13 @@ return [
      |    to use. Default: config('sync.default_file_hasher')
      */
     'directories' => [],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Files per request
+     |--------------------------------------------------------------------------
+     |
+     | The number of files for the client to download per HTTP request
+     */
+    'files_per_request' => 10,
 ];
