@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Stickee\Sync\Models\Property;
+use Stickee\Sync\TableImporter;
 
 /**
  */
@@ -49,20 +50,14 @@ class Client
 
     protected function updateTable($configName): void
     {
-        dump($configName);
-        $data = ['config_name' => $configName];
-
-        // TODO $hash = $this->syncService->getTableHash($configName);
-        $hash = $this->syncService->getTableHash('users_dest');
-
-        if ($hash !== '') {
-            $data['hash'] = $hash;
-        }
-
-        dump( $this->syncService->getTableHash($configName));
         $response = $this->client->post(
             config('sync.api_url') . '/getTable',
-            ['form_params' => $data]
+            [
+                'form_params' => [
+                    'config_name' => $configName,
+                    'hash' => $this->syncService->getTableHash($configName),
+                ],
+            ]
         );
 
         // Not modified
@@ -70,28 +65,23 @@ class Client
             return;
         }
 
-        dump(gzdecode((string)$response->getBody()));
+        $importer = app(TableImporter::class);
 
-        // todo merge in to table
-        // $config =
-        // $connection = $config['connection'] ?? config('database.default');
-        // $dest = DB::connection($connection);
+        // TODO: make this better
+        $f = fopen('php://memory', 'w+');
+        fwrite($f, gzdecode((string)$response->getBody()));
+        fseek($f, 0);
+
+        $importer->import($f, $configName);
     }
 
     protected function updateDirectory(string $configName): void
     {
-        // TODO $localHashes = $this->syncService->getFileHashes($configName);
-        $localHashes = $this->syncService->getFileHashes('dest');
+        $localHashes = $this->syncService->getFileHashes($configName);
         $remoteHashes = $this->getRemoteFileHashes($configName);
 
-        // Remove any files that have been deleted
-        foreach ($localHashes as $file => $hash) {
-            if (!isset($remoteHashes[$file])) {
-                // TODO
-                $disk = 'dest';
-                Storage::disk($disk)->delete($file);
-            }
-        }
+        // Remove any files that have been deleted on the server
+        $this->syncService->deleteRemovedFiles($configName, $localHashes, $remoteHashes);
 
         // Remove unchanged files
         $fileList = $remoteHashes->reject(function ($hash, $file) use ($localHashes) {
@@ -133,11 +123,10 @@ class Client
 
         $importer = app(FileImporter::class);
 
-        // todo $importer->importToDirectory($response->getBody(), $configName);
-        // todo make this better
+        // TODO: make this better
         $f = fopen('php://memory', 'w+');
         fwrite($f, (string)$response->getBody());
         fseek($f, 0);
-        $importer->importToDirectory($f, 'dest'); // todo $configName
+        $importer->importToDirectory($f, $configName);
     }
 }

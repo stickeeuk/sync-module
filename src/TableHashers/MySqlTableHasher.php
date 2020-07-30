@@ -44,6 +44,6 @@ class MySqlTableHasher implements TableHasherInterface
 
         $result = $dbConnection->select('SELECT @crc AS crc');
 
-        return $result[0]->crc;
+        return $result[0]->crc === '' ? '--EMPTY--' : $result[0]->crc;
     }
 }

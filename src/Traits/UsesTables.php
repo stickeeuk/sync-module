@@ -20,12 +20,24 @@ trait UsesTables
         $this->checkTableConfig($configName);
 
         $config = config('sync.tables')[$configName];
+        $primary = $config['primary'] ?? ['id'];
+
+        if (!is_array($primary)) {
+            $primary = [$primary];
+        }
+
+        $importIndexes = $config['importIndexes'] ?? ['PRIMARY'];
+
+        if (!is_array($importIndexes)) {
+            $importIndexes = [$importIndexes];
+        }
 
         return [
             'config' => $config,
             'connection' => $config['connection'] ?? config('database.default'),
             'table' => $config['table'] ?? $configName,
-            'primary' => $config['primary'] ?? ['id'],
+            'primary' => $primary,
+            'importIndexes' => $importIndexes,
         ];
     }
 }

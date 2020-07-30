@@ -22,6 +22,8 @@ return [
      |    (i.e. DB::connection($name)). Default: config(database.default)
      |  - (string|array) primary: The column or array of columns that make up
      |    the primary key. Default: "id"
+     |  - (string|array) importIndexes: Indexes to join on when importing data.
+          Default: "PRIMARY"
      |  - (string) tableName: The table name, if different to the key
      |
      | Example:

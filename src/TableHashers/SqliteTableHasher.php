@@ -51,6 +51,6 @@ class SqliteTableHasher implements TableHasherInterface
                 }
             });
 
-        return $hash;
+        return $hash === '' ? '--EMPTY--' : $hash;
     }
 }

@@ -48,4 +48,16 @@ class SyncService
         $fileExporter = app(FileExporter::class);
         $fileExporter->export($stream, $configName, $files);
     }
+
+    public function deleteRemovedFiles(string $configName, Collection $localHashes, Collection $remoteHashes)
+    {
+        $config = $this->getDirectoryInfo($configName);
+        $disk = Storage::disk($config['disk']);
+
+        foreach ($localHashes as $file => $hash) {
+            if (!isset($remoteHashes[$file])) {
+                $disk->delete($file);
+            }
+        }
+    }
 }
