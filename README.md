@@ -73,7 +73,6 @@ Tables can be hashed using a class that implements \Stickee\Sync\Interfaces\Tabl
 
 // TODO
 client side
- - service
- - import table
 refactor hashers/exporters to not read from config?
 docblocks
+allow single transaction
