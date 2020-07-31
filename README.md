@@ -18,7 +18,8 @@ Stickee\Sync\ServiceProvider::class,
 
 # Usage for Servers (Sending Data)
 
-Add the routes to your `routes/api.php`. You will usually want to add some form of authentication, like this:
+Add the routes to your `routes/api.php` by calling `\Stickee\Sync\ServiceProvider::routes();`.
+You will usually want to add some form of authentication, for example like this:
 ```
 Route::middleware('auth:api')->group(function () {
     \Stickee\Sync\ServiceProvider::routes();
@@ -37,6 +38,30 @@ Run `php artisan vendor:publish --provider="\Stickee\Sync\ServiceProvider"` to p
 Set the following in your .env file:
 
  - `SYNC_API_URL`: The server URL, e.g. `https://example.com/api/sync`
+
+If you have added authentication, then you will need to make the Guzzle client authenticate.
+For api-token authenticaion, add this to you `config/sync.php`
+```
+'api_key' => env('SYNC_API_KEY'),
+```
+and add `SYNC_API_KEY=XXXXXXX` to your `.env` file.
+
+Then in `AppServiceProvider::register()` add:
+
+```
+app()->when(\Stickee\Sync\Client::class)
+    ->needs(\GuzzleHttp\Client::class)
+    ->give(function () {
+        $config = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('sync.api_key'),
+                'Accept' => 'application/json',
+            ],
+        ];
+
+        return new \GuzzleHttp\Client($config);
+    });
+```
 
 # Commands
 
@@ -96,8 +121,6 @@ Run unit tests with the following command:
  ` ./vendor/bin/phpunit -v`
 
 // TODO
-client side
 refactor hashers/exporters to not read from config?
 docblocks
 allow single transaction
-api auth

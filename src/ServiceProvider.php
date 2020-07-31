@@ -52,8 +52,6 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__ . '/../config/sync.php' => config_path('sync.php'),
         ]);
 
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-
         $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
     }
 

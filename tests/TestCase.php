@@ -5,6 +5,7 @@ namespace Stickee\Sync\Test;
 use Faker\Factory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase as Orchestra;
 use PDO;
 use Stickee\Sync\Seeds\TestSeeder;
@@ -50,6 +51,7 @@ abstract class TestCase extends Orchestra
     {
         // dump('Migrating ' . config('database.default'));
         $this->loadLaravelMigrations();
+        $this->loadMigrationsFrom(__DIR__ . '/../src/database/migrations');
         $this->artisan('migrate');
 
         $this->withFactories(__DIR__ . '/../src/database/factories');
