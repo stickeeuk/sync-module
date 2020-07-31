@@ -78,4 +78,13 @@ return [
      | The number of files for the client to download per HTTP request
      */
     'files_per_request' => 10,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Single transaction
+     |--------------------------------------------------------------------------
+     |
+     | Perform all table updates in a single transaction
+     */
+    'single_transaction' => true,
 ];

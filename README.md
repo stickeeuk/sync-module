@@ -123,4 +123,3 @@ Run unit tests with the following command:
 // TODO
 refactor hashers/exporters to not read from config?
 docblocks
-allow single transaction

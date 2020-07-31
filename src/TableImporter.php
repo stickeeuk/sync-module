@@ -17,13 +17,21 @@ class TableImporter
 {
     use UsesTables;
 
-    public function import($stream, string $configName): void
+    private $configName;
+    private $importer;
+
+    public function __construct(string $configName)
     {
-        $config = $this->getTableInfo($configName);
+        $this->configName = $configName;
+    }
+
+    public function initialise(): void
+    {
+        $config = $this->getTableInfo($this->configName);
         $connection = DB::connection($config['connection']);
 
         $tableDescriber = app(TableDescriber::class);
-        $tableDescription = $tableDescriber->describe($configName);
+        $tableDescription = $tableDescriber->describe($this->configName);
         $columns = collect($tableDescription['columns'])
             ->pluck('name')
             ->all();
@@ -51,8 +59,15 @@ class TableImporter
 
         $iterable = app()->makeWith(JsonStreamIterator::class, ['stream' => $stream]);
 
-        $importer = new Importer($dataMerger, $temporaryTableManager, $iterable);
-        $importer->initialise();
+        $this->importer = new Importer($dataMerger, $temporaryTableManager, $iterable);
+        $this->importer->initialise();
+    }
+
+    public function import($stream): void
+    {
+        if (!$this->importer) {
+            $this->initialise();
+        }
 
         DB::transaction(function () use ($importer) {
             $importer->run();

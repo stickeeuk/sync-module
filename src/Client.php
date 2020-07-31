@@ -33,9 +33,28 @@ class Client
     protected function updateTables(): void
     {
         $tables = array_keys(config('sync.tables'));
+        $importers = [];
+        $app = app();
+
+        // TableImporter::initialise() uses DDL which will close any open transactions
+        // in MySQL, so initialise them all first
+        foreach ($tables as $configName) {
+            $importer = $app->makeWith(TableImporter::class, ['configName' => $configName]);
+            $importer->initialise();
+
+            $importers[$configName] = $importer;
+        }
+
+        if (config('sync.single_transaction')) {
+            DB::startTransaction();
+        }
 
         foreach ($tables as $configName) {
-            $this->updateTable($configName);
+            $this->updateTable($configName, $importers[$configName]);
+        }
+
+        if (config('sync.single_transaction')) {
+            DB::commit();
         }
     }
 
@@ -48,7 +67,7 @@ class Client
         }
     }
 
-    protected function updateTable($configName): void
+    protected function updateTable(string $configName, TableImporter $importer): void
     {
         $response = $this->client->post(
             config('sync.api_url') . '/getTable',
@@ -65,14 +84,12 @@ class Client
             return;
         }
 
-        $importer = app(TableImporter::class);
-
         // TODO: make this better
         $f = fopen('php://memory', 'w+');
         fwrite($f, gzdecode((string)$response->getBody()));
         fseek($f, 0);
 
-        $importer->import($f, $configName);
+        $importer->import($f);
     }
 
     protected function updateDirectory(string $configName): void
