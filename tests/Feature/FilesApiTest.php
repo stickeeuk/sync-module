@@ -10,10 +10,9 @@ use Stickee\Sync\Test\TestCase;
 class FilesApiTest extends TestCase
 {
     /**
-     *
-     * @return void
+     * Test getting file hashes via the API
      */
-    public function test_get_hashes()
+    public function test_get_hashes(): void
     {
         $response = $this->json('POST', '/sync/getFileHashes', ['config_name' => 'sync_test']);
 
@@ -36,10 +35,9 @@ class FilesApiTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test getting files via the API
      */
-    public function test_get_files()
+    public function test_get_files(): void
     {
         $disk = Storage::disk(config('sync.directories.sync_test.disk'));
         $expected = $disk->read('test-stream.bin');
@@ -66,10 +64,9 @@ class FilesApiTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test getting a file we shouldn't be allowed to
      */
-    public function test_get_illegal_file()
+    public function test_get_illegal_file(): void
     {
         $this->expectException(LogicException::class);
         $files = ['../README.md'];

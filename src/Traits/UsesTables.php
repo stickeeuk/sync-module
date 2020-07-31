@@ -8,6 +8,11 @@ use InvalidArgumentException;
  */
 trait UsesTables
 {
+    /**
+     * Check if a config name exists
+     *
+     * @param string $configName The name in config('sync.tables')
+     */
     protected function checkTableConfig(string $configName)
     {
         if (!isset(config('sync.tables')[$configName])) {
@@ -15,6 +20,13 @@ trait UsesTables
         }
     }
 
+    /**
+     * Get information about a table
+     *
+     * @param string $configName The name in config('sync.tables')
+     *
+     * @return array
+     */
     protected function getTableInfo(string $configName): array
     {
         $this->checkTableConfig($configName);

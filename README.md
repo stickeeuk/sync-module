@@ -119,7 +119,3 @@ First copy `phpunit.xml.dist` to `phpunit.xml` and fill in your MySQL database d
 Run unit tests with the following command:
 
  ` ./vendor/bin/phpunit -v`
-
-// TODO
-refactor hashers/exporters to not read from config?
-docblocks

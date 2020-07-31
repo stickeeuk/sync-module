@@ -11,8 +11,19 @@ class TableExporter
 {
     use UsesTables;
 
+    /**
+     * The number of records to get from the database at once
+     *
+     * @var int $chunkSize
+     */
     public $chunkSize = 1000;
 
+    /**
+     * Export a table to a stream
+     *
+     * @param mixed $stream The stream to write to
+     * @param string $configName The key in config('sync.tables')
+     */
     public function export($stream, string $configName): void
     {
         $config = $this->getTableInfo($configName);

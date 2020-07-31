@@ -18,10 +18,9 @@ use Stickee\Sync\Test\TestCase;
 class TableExporterTest extends TestCase
 {
     /**
-     *
-     * @return void
+     * Test the table exporter
      */
-    public function test_export_data()
+    public function test_export_data(): void
     {
         $this->useSqlite();
 

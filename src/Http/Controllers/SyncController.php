@@ -3,14 +3,11 @@
 namespace Stickee\Sync\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Stickee\Sync\FileExporter;
 use Stickee\Sync\Http\Requests\GetFileHashesRequest;
 use Stickee\Sync\Http\Requests\GetFilesRequest;
 use Stickee\Sync\Http\Requests\GetTableHashRequest;
 use Stickee\Sync\Http\Requests\GetTableRequest;
-use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\SyncService;
-use Stickee\Sync\TableExporter;
 use Stickee\Sync\Traits\UsesDirectories;
 use Stickee\Sync\Traits\UsesTables;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -20,13 +17,29 @@ class SyncController extends Controller
     use UsesTables;
     use UsesDirectories;
 
-    public function getTableHash(GetTableHashRequest $request, SyncService $syncService)
+    /**
+     * Get a table hash
+     *
+     * @param \Stickee\Sync\Http\Requests\GetTableHashRequest $request The request
+     * @param \Stickee\Sync\SyncService $syncService The sync service
+     *
+     * @return array
+     */
+    public function getTableHash(GetTableHashRequest $request, SyncService $syncService): array
     {
         return [
             'hash' => $syncService->getTableHash($request->config_name),
         ];
     }
 
+    /**
+     * Get a table
+     *
+     * @param \Stickee\Sync\Http\Requests\GetTableRequest $request The request
+     * @param \Stickee\Sync\SyncService $syncService The sync service
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function getTable(GetTableRequest $request, SyncService $syncService)
     {
         if ($request->hash) {
@@ -48,6 +61,14 @@ class SyncController extends Controller
             ]);
     }
 
+    /**
+     * Get file hashes
+     *
+     * @param \Stickee\Sync\Http\Requests\GetFileHashesRequest $request The request
+     * @param \Stickee\Sync\SyncService $syncService The sync service
+     *
+     * @return array
+     */
     public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService)
     {
         return [
@@ -55,6 +76,14 @@ class SyncController extends Controller
         ];
     }
 
+    /**
+     * Get a table hash
+     *
+     * @param \Stickee\Sync\Http\Requests\GetFilesRequest $request The request
+     * @param \Stickee\Sync\SyncService $syncService The sync service
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function getFiles(GetFilesRequest $request, SyncService $syncService)
     {
         return new StreamedResponse(

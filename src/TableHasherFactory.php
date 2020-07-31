@@ -13,27 +13,36 @@ use Stickee\Sync\TableHashers\SqliteTableHasher;
  */
 class TableHasherFactory
 {
-    // TODO don't accept connection? use table instead?
-    public function create(?string $connection = null): TableHasherInterface
+    /**
+     * Create a table hasher
+     *
+     * @param string $connection The database connection name
+     *
+     * @return \Stickee\Sync\Interfaces\TableHasherInterface
+     */
+    public function create(string $connection): TableHasherInterface
     {
-        $connection = $connection ?: config('database.default');
+        $class = '';
+        $tableDescriber = app(TableDescriberInterface::class);
         $driver = config('database.connections.' . $connection . '.driver');
 
         if (!$driver) {
             throw new InvalidArgumentException('Invalid connection "' . $connection . '"');
         }
 
-        $tableDescriber = app(TableDescriberInterface::class);
-
         switch ($driver) {
             case 'mysql':
-                return app()->makeWith(MySqlTableHasher::class, ['tableDescriber' => $tableDescriber]);
+                $class = MySqlTableHasher::class;
+                break;
 
             case 'sqlite':
-                return app()->makeWith(SqliteTableHasher::class, ['tableDescriber' => $tableDescriber]);
+                $class = SqliteTableHasher::class;
+                break;
 
             default:
                 throw new Exception('No TableHasher for "' . $driver . '"');
         }
+
+        return app()->makeWith($class, ['tableDescriber' => $tableDescriber]);
     }
 }

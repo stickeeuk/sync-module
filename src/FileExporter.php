@@ -3,7 +3,6 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
@@ -12,6 +11,13 @@ class FileExporter
 {
     use UsesDirectories;
 
+    /**
+     * Export files to a stream
+     *
+     * @param mixed $stream The stream to write to
+     * @param string $configName The name in config('sync.directories')
+     * @param array $files The files to copy to the stream
+     */
     public function export($stream, string $configName, array $files): void
     {
         $config = $this->getDirectoryInfo($configName);

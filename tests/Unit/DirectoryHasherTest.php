@@ -9,10 +9,9 @@ use Stickee\Sync\Test\TestCase;
 class DirectoryHasherTest extends TestCase
 {
     /**
-     *
-     * @return void
+     * Test the NullDirectoryHasher
      */
-    public function test_null_directory_hasher()
+    public function test_null_directory_hasher(): void
     {
         $directoryHasher = app(NullDirectoryHasher::class);
         $hashes = $directoryHasher->hash('sync_test');
@@ -29,10 +28,9 @@ class DirectoryHasherTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test the Md5DirectoryHasher
      */
-    public function test_md5_directory_hasher()
+    public function test_md5_directory_hasher(): void
     {
         $directoryHasher = app(Md5DirectoryHasher::class);
         $hashes = $directoryHasher->hash('sync_test');

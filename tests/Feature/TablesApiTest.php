@@ -8,7 +8,18 @@ use Stickee\Sync\Test\TestCase;
 
 class TablesApiTest extends TestCase
 {
+    /**
+     * Hash of the data in the table
+     *
+     * @var string HASH
+     */
     const HASH = 'e022fe6a4e3352603ce26d4c13792f431ab21282';
+
+    /**
+     * Expected JSON stream
+     *
+     * @var string CONTENT
+     */
     const CONTENT = '{"id":"1","test_1":"49766366","test_2":"Amet iste laborum eius est dolor dolores.","test_3":null}' . "\n"
             . '{"id":"2","test_1":"1506369","test_2":"Quibusdam sed vel a quo sed fugit facilis.","test_3":null}' . "\n"
             . '{"id":"3","test_1":"4","test_2":"Ipsam sit veniam sed fuga aspernatur natus.","test_3":null}' . "\n"
@@ -24,17 +35,19 @@ class TablesApiTest extends TestCase
         runDatabaseMigrations as originalRunDatabaseMigrations;
     }
 
-    public function runDatabaseMigrations()
+    /**
+     * Run migrations
+     */
+    public function runDatabaseMigrations(): void
     {
         $this->useSqlite();
         $this->originalRunDatabaseMigrations();
     }
 
     /**
-     *
-     * @return void
+     * Test getting the hash of a table
      */
-    public function test_get_table_hash()
+    public function test_get_table_hash(): void
     {
         $this->useSqlite();
 
@@ -53,10 +66,9 @@ class TablesApiTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test getting the data in a table
      */
-    public function test_get_table()
+    public function test_get_table(): void
     {
         $this->useSqlite();
 
@@ -76,10 +88,9 @@ class TablesApiTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test getting data when the table has been modified
      */
-    public function test_get_table_modified()
+    public function test_get_table_modified(): void
     {
         $this->useSqlite();
 
@@ -99,10 +110,9 @@ class TablesApiTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test getting data when the table has not been modified
      */
-    public function test_get_table_not_modified()
+    public function test_get_table_not_modified(): void
     {
         $this->useSqlite();
 

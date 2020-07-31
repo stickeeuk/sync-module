@@ -3,7 +3,6 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
@@ -12,6 +11,12 @@ class FileImporter
 {
     use UsesDirectories;
 
+    /**
+     * Import files from a stream
+     *
+     * @param mixed $stream The stream to read from
+     * @param mixed $callback A callback for each file
+     */
     public function import($stream, $callback): void
     {
         while (!feof($stream)) {
@@ -44,6 +49,12 @@ class FileImporter
         }
     }
 
+    /**
+     * Import a file stream to a directory
+     *
+     * @param mixed $stream The stream to read from
+     * @param string $configName The key in config('sync.directories')
+     */
     public function importToDirectory($stream, string $configName): void
     {
         $config = $this->getDirectoryInfo($configName);

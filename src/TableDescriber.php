@@ -3,7 +3,6 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Traits\UsesTables;
 
@@ -13,6 +12,13 @@ class TableDescriber implements TableDescriberInterface
 {
     use UsesTables;
 
+    /**
+     * Get a description of a table
+     *
+     * @param string $table The table name
+     *
+     * @return array
+     */
     public function describe(string $configName): array
     {
         $config = $this->getTableInfo($configName);

@@ -20,7 +20,10 @@ class DatabaseTest extends TestCase
         runDatabaseMigrations as originalRunDatabaseMigrations;
     }
 
-    public function runDatabaseMigrations()
+    /**
+     * Run migrations
+     */
+    public function runDatabaseMigrations(): void
     {
         $this->useSqlite();
         $this->originalRunDatabaseMigrations();
@@ -30,10 +33,9 @@ class DatabaseTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test the factory makes an SQLite table hasher
      */
-    public function test_table_hasher_factory_sqlite()
+    public function test_table_hasher_factory_sqlite(): void
     {
         $this->useSqlite();
 
@@ -43,10 +45,9 @@ class DatabaseTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test the factory makes a MySQL table hasher
      */
-    public function test_table_hasher_factory_mysql()
+    public function test_table_hasher_factory_mysql(): void
     {
         $this->useMysql();
 
@@ -56,25 +57,9 @@ class DatabaseTest extends TestCase
     }
 
     /**
-     *
-     * @return void
+     * Test the SQLite table hasher
      */
-    public function test_table_hasher_mysql()
-    {
-        $this->useMysql();
-
-        $tableHasher = app(TableHasherInterface::class);
-        $hash = $tableHasher->hash('sync_tests');
-
-        $this->assertEquals(MySqlTableHasher::class, get_class($tableHasher), 'Wrong class created for MySQL');
-        $this->assertEquals('e022fe6a4e3352603ce26d4c13792f431ab21282', $hash, 'Wrong hash for MySQL');
-    }
-
-    /**
-     *
-     * @return void
-     */
-    public function test_table_hasher_sqlite()
+    public function test_table_hasher_sqlite(): void
     {
         $this->useSqlite();
 
@@ -83,5 +68,19 @@ class DatabaseTest extends TestCase
 
         $this->assertEquals(SqliteTableHasher::class, get_class($tableHasher), 'Wrong class created for SQLite');
         $this->assertEquals('e022fe6a4e3352603ce26d4c13792f431ab21282', $hash, 'Wrong hash for SQLite');
+    }
+
+    /**
+     * Test the MySQL table hasher
+     */
+    public function test_table_hasher_mysql(): void
+    {
+        $this->useMysql();
+
+        $tableHasher = app(TableHasherInterface::class);
+        $hash = $tableHasher->hash('sync_tests');
+
+        $this->assertEquals(MySqlTableHasher::class, get_class($tableHasher), 'Wrong class created for MySQL');
+        $this->assertEquals('e022fe6a4e3352603ce26d4c13792f431ab21282', $hash, 'Wrong hash for MySQL');
     }
 }

@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Stickee\Sync\Console\Commands\Sync;
-use Stickee\Sync\Exceptions\PropertyNotFoundException;
 use Stickee\Sync\Http\Controllers\SyncController;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
-use Stickee\Sync\Models\Affiliate;
-use Stickee\Sync\Models\Property;
-use Stickee\Sync\PropertyService;
 use Stickee\Sync\TableDescriber;
 use Stickee\Sync\TableHasherFactory;
 
@@ -33,7 +29,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->bind(TableDescriberInterface::class, TableDescriber::class);
 
         $this->app->bind(TableHasherInterface::class, function ($app, $arguments) {
-            return app(TableHasherFactory::class)->create($arguments['connection'] ?? null);
+            return app(TableHasherFactory::class)->create($arguments['connection'] ?? config('database.default'));
         });
 
         $this->commands([Sync::class]);
@@ -55,7 +51,10 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
     }
 
-    public static function routes()
+    /**
+     * Register routes needed by the API
+     */
+    public static function routes(): void
     {
         Route::post(config('sync.slug') . '/getTableHash', '\\' . SyncController::class . '@getTableHash')->name('sync.getTableHash');
         Route::post(config('sync.slug') . '/getTable', '\\' . SyncController::class . '@getTable')->name('sync.getTable');

@@ -8,11 +8,19 @@ use Stickee\Sync\Interfaces\DirectoryHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
+ * Hash all files in a directory using MD4
  */
 class Md5DirectoryHasher implements DirectoryHasherInterface
 {
     use UsesDirectories;
 
+    /**
+     * Hash a directory specified in config('sync.directories')
+     *
+     * @param string $configName The key from config('sync.directories')
+     *
+     * @return array A map of file => hash
+     */
     public function hash(string $configName): array
     {
         $config = $this->getDirectoryInfo($configName);

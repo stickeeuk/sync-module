@@ -10,10 +10,9 @@ use Stickee\Sync\Test\TestCase;
 class FileExporterTest extends TestCase
 {
     /**
-     *
-     * @return void
+     * Test the file exporter
      */
-    public function test_file_exporter()
+    public function test_file_exporter(): void
     {
         $stream = fopen('php://memory', 'w+');
         $fileExporter = app(FileExporter::class);

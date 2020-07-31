@@ -3,7 +3,6 @@
 namespace Stickee\Sync\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Stickee\Sync\Client;
 

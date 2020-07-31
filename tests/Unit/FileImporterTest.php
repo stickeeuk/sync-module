@@ -10,10 +10,9 @@ use Stickee\Sync\Test\TestCase;
 class FileImporterTest extends TestCase
 {
     /**
-     *
-     * @return void
+     * Test the file importer
      */
-    public function test_file_importer()
+    public function test_file_importer(): void
     {
         $fileImporter = app(FileImporter::class);
         $disk = Storage::disk(config('sync.directories.sync_test.disk'));

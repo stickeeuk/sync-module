@@ -13,13 +13,30 @@ class MySqlTableHasher implements TableHasherInterface
 {
     use UsesTables;
 
+    /**
+     * The table describer
+     *
+     * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
+     */
     private $tableDescriber;
 
+    /**
+     * Constructor
+     *
+     * @param \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber The table describer
+     */
     public function __construct(TableDescriberInterface $tableDescriber)
     {
         $this->tableDescriber = $tableDescriber;
     }
 
+    /**
+     * Get a hash of the data in a table
+     *
+     * @param string $configName The key in config('sync.tables')
+     *
+     * @return string
+     */
     public function hash(string $configName): string
     {
         $config = $this->getTableInfo($configName);

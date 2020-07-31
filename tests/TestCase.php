@@ -17,7 +17,10 @@ abstract class TestCase extends Orchestra
         runDatabaseMigrations as originalRunDatabaseMigrations;
     }
 
-    public function runDatabaseMigrations()
+    /**
+     * Run migrations
+     */
+    public function runDatabaseMigrations(): void
     {
         $this->useSqlite();
         $this->originalRunDatabaseMigrations();
@@ -27,7 +30,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * Setup the test environment.
+     * Set up the test environment
      */
     protected function setUp(): void
     {
@@ -47,9 +50,11 @@ abstract class TestCase extends Orchestra
         $this->setUpDatabase();
     }
 
+    /**
+     * Set up the database
+     */
     private function setUpDatabase()
     {
-        // dump('Migrating ' . config('database.default'));
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__ . '/../src/database/migrations');
         $this->artisan('migrate');
@@ -60,10 +65,9 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * Define environment setup.
+     * Define environment setup
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
+     * @param \Illuminate\Foundation\Application $app The application
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -117,19 +121,25 @@ abstract class TestCase extends Orchestra
      *
      * @return array
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             ServiceProvider::class,
         ];
     }
 
-    protected function useSqlite()
+    /**
+     * Set the SQLite connection as trhhe default
+     */
+    protected function useSqlite(): void
     {
         app()['config']->set('database.default', 'test_sqlite');
     }
 
-    protected function useMysql()
+    /**
+     * Set the MySQL connection as trhhe default
+     */
+    protected function useMysql(): void
     {
         app()['config']->set('database.default', 'test_mysql');
     }

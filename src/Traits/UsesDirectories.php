@@ -8,13 +8,25 @@ use InvalidArgumentException;
  */
 trait UsesDirectories
 {
-    protected function checkDirectoryConfig(string $configName)
+    /**
+     * Check if a config name exists
+     *
+     * @param string $configName The name in config('sync.directories')
+     */
+    protected function checkDirectoryConfig(string $configName): void
     {
         if (!isset(config('sync.directories')[$configName])) {
             throw new InvalidArgumentException('"' . $configName . '" is not in sync.directories');
         }
     }
 
+    /**
+     * Get information about a directory
+     *
+     * @param string $configName The name in config('sync.directories')
+     *
+     * @return array
+     */
     protected function getDirectoryInfo(string $configName): array
     {
         $this->checkDirectoryConfig($configName);

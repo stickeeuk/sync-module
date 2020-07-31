@@ -12,6 +12,13 @@ class NullDirectoryHasher implements DirectoryHasherInterface
 {
     use UsesDirectories;
 
+    /**
+     * Hash a directory specified in config('sync.directories')
+     *
+     * @param string $configName The key in config('sync.directories')
+     *
+     * @return array A map of file => hash
+     */
     public function hash(string $configName): array
     {
         $config = $this->getDirectoryInfo($configName);

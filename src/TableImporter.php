@@ -17,14 +17,33 @@ class TableImporter
 {
     use UsesTables;
 
+    /**
+     * The key in config('sync.tables')
+     *
+     * @var string $configName
+     */
     private $configName;
+
+    /**
+     * The importer
+     *
+     * @var \Stickee\Import\Importer $importer
+     */
     private $importer;
 
+    /**
+     * Constructor
+     *
+     * @param string $configName The key in config('sync.tables')
+     */
     public function __construct(string $configName)
     {
         $this->configName = $configName;
     }
 
+    /**
+     * Initialise the importer
+     */
     public function initialise(): void
     {
         $config = $this->getTableInfo($this->configName);
@@ -63,6 +82,11 @@ class TableImporter
         $this->importer->initialise();
     }
 
+    /**
+     * Import a stream to the table
+     *
+     * @param mixed $stream The stream to read from
+     */
     public function import($stream): void
     {
         if (!$this->importer) {
