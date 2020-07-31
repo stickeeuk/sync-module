@@ -1,12 +1,12 @@
 # Stickee Sync
 
-This a composer module for loading affiliate information from the Sync API.
+This a composer module for synchronising files or database tables between two servers.
 
 ## Installation
 
 `composer require stickee/sync`
 
-This module ships with a Laravel service provider which will be automatically registered for Laravel 5.5+.
+This module ships with a Laravel service provider which will be automatically registered.
 
 ### Manual registration
 
@@ -16,16 +16,33 @@ The module can be manually registered by adding this to the `providers` array in
 Stickee\Sync\ServiceProvider::class,
 ```
 
-## Usage for Websites
+# Usage for Servers (Sending Data)
 
-Add the routes to your routes/api.php. You will usually want to add some form of authentication, like this:
+Add the routes to your `routes/api.php`. You will usually want to add some form of authentication, like this:
 ```
 Route::middleware('auth:api')->group(function () {
     \Stickee\Sync\ServiceProvider::routes();
 });
 ```
 
-## Developing
+## Configuration
+
+Run `php artisan vendor:publish --provider="\Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `databases`.
+
+# Usage for Clients (Receiving Data)
+
+## Configuration
+
+Run `php artisan vendor:publish --provider="\Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `databases`.
+Set the following in your .env file:
+
+ - `SYNC_API_URL`: The server URL, e.g. `https://example.com/api/sync`
+
+# Commands
+
+The package supplies `php artisan sync` to run a synchronisation from the command line.
+
+# Developing
 
 The easiest way to make changes is to make the project you're importing the module in to load the module from your filesystem instead of the composer repository, like this:
 
@@ -33,11 +50,11 @@ The easiest way to make changes is to make the project you're importing the modu
 2. Edit `composer.json` and add
     ```
     "repositories": [
-            {
-                "type": "path",
-                "url": "../sync"
-            }
-        ]
+        {
+            "type": "path",
+            "url": "../sync"
+        }
+    ]
     ```
     where "../sync" is the path to where you have this project checked out
 3. `composer require stickee/sync`
@@ -71,8 +88,16 @@ Tables can be hashed using a class that implements \Stickee\Sync\Interfaces\Tabl
  - For each chunk, the client sends a getFiles request
  - Files are saved to the disk
 
+ ### Testing
+
+First copy `phpunit.xml.dist` to `phpunit.xml` and fill in your MySQL database details.
+Run unit tests with the following command:
+
+ ` ./vendor/bin/phpunit -v`
+
 // TODO
 client side
 refactor hashers/exporters to not read from config?
 docblocks
 allow single transaction
+api auth

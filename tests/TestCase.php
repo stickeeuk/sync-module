@@ -73,20 +73,27 @@ abstract class TestCase extends Orchestra
             'prefix'   => 'test_',
         ]);
 
-        // $app['config']->set('database.default', 'test_mysql');
-        // TODO use env
         $app['config']->set('database.connections.test_mysql', [
-            'driver'   => 'mysql',
-            'host'   => 'localhost',
-            'database' => 'sync_test',
-            'prefix'   => 'test_',
-            'username'   => 'root',
-            'password'   => '',
-            'options' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => 'test_',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+
                 // SQLite always stringifies fetches, so set it on mysql
                 // so that the tests get the same data regardless of the DB
                 PDO::ATTR_STRINGIFY_FETCHES => true,
-            ],
+            ]),
         ]);
 
         $app['config']->set('sync.tables', ['sync_tests' => []]);
