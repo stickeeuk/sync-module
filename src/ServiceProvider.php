@@ -18,6 +18,21 @@ use Stickee\Sync\TableHasherFactory;
 class ServiceProvider extends BaseServiceProvider
 {
     /**
+     * Fake value for hashing NULL, otherwise the whole row's hash will be NULL
+     *
+     * @var string NULL_VALUE
+     */
+    const NULL_VALUE = 'NULL9cf4-973a-4539-a5f2-8d4bde0aNULL';
+
+    /**
+     * Fake value for hashing an empty table, otherwise it will be empty string,
+     * which will fail validation
+     *
+     * @var string EMPTY_TABLE_HASH
+     */
+    const EMPTY_TABLE_HASH = '--EMPTY--';
+
+    /**
      * Register the service provider
      */
     public function register(): void

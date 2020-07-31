@@ -5,6 +5,7 @@ namespace Stickee\Sync\TableHashers;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
+use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
 /**
@@ -44,7 +45,7 @@ class MySqlTableHasher implements TableHasherInterface
         $tableDescription = $this->tableDescriber->describe($configName);
 
         foreach ($tableDescription['columns'] as $column) {
-            $fields[] = 'IFNULL(' . $column['name'] . ', "NULL9cf4-973a-4539-a5f2-8d4bde0aNULL")';
+            $fields[] = 'IFNULL(' . $column['name'] . ', "' . ServiceProvider::NULL_VALUE . '")';
         }
 
         $dbConnection = DB::connection($config['connection']);
@@ -61,6 +62,6 @@ class MySqlTableHasher implements TableHasherInterface
 
         $result = $dbConnection->select('SELECT @crc AS crc');
 
-        return $result[0]->crc === '' ? '--EMPTY--' : $result[0]->crc;
+        return $result[0]->crc === '' ? ServiceProvider::EMPTY_TABLE_HASH : $result[0]->crc;
     }
 }

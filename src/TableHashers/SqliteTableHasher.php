@@ -5,6 +5,7 @@ namespace Stickee\Sync\TableHashers;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
+use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
 /**
@@ -19,6 +20,13 @@ class SqliteTableHasher implements TableHasherInterface
      * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
      */
     private $tableDescriber;
+
+    /**
+     * The number of records to get from the database at once
+     *
+     * @var int $chunkSize
+     */
+    public $chunkSize = 1000;
 
     /**
      * Constructor
@@ -54,13 +62,13 @@ class SqliteTableHasher implements TableHasherInterface
             ->table($config['table'])
             ->select($fields)
             ->orderBy('rowid')
-            ->chunk(1000, function ($rows) use (&$hash) {
+            ->chunk($this->chunkSize, function ($rows) use (&$hash) {
                 foreach ($rows as $row) {
                     $row = (array)$row;
                     array_unshift($row, $hash);
 
                     $row = array_map(function (?string $value) {
-                        return $value === null ? 'NULL9cf4-973a-4539-a5f2-8d4bde0aNULL' : $value;
+                        return $value === null ? ServiceProvider::NULL_VALUE : $value;
                     }, $row);
 
                     $line = implode('|', $row);
@@ -68,6 +76,6 @@ class SqliteTableHasher implements TableHasherInterface
                 }
             });
 
-        return $hash === '' ? '--EMPTY--' : $hash;
+        return $hash === '' ? ServiceProvider::EMPTY_TABLE_HASH : $hash;
     }
 }
