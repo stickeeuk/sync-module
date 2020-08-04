@@ -1,0 +1,37 @@
+{
+    "name": "stickee/sync",
+    "description": "Stickee sync module - synchronise database tables",
+    "version": "0.0.1",
+    "keywords": [
+        "sync"
+    ],
+    "homepage": "https://www.stickee.co.uk",
+    "readme": "README.md",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Stickee\\Sync\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stickee\\Sync\\Test\\": "tests",
+            "Stickee\\Sync\\Seeds\\": "src/database/seeds"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Stickee\\Sync\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "illuminate/support": "^5.6 || ^6.0 || ^7.0",
+        "doctrine/dbal": "^2.10",
+        "stickee/import": "^1.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.2"
+    }
+}
