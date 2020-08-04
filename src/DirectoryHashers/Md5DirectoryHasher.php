@@ -8,7 +8,7 @@ use Stickee\Sync\Interfaces\DirectoryHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
- * Hash all files in a directory using MD4
+ * Hash all files in a directory using MD5
  */
 class Md5DirectoryHasher implements DirectoryHasherInterface
 {

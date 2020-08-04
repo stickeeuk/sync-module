@@ -150,7 +150,7 @@ class Client
     }
 
     /**
-     * Get file hashses from the server
+     * Get file hashes from the server
      *
      * @param string $configName The name in config('sync.directories')
      *

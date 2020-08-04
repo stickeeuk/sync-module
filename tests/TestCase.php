@@ -129,7 +129,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * Set the SQLite connection as trhhe default
+     * Set the SQLite connection as the default
      */
     protected function useSqlite(): void
     {
@@ -137,7 +137,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * Set the MySQL connection as trhhe default
+     * Set the MySQL connection as the default
      */
     protected function useMysql(): void
     {

@@ -3,6 +3,7 @@
 namespace Stickee\Sync\Test\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\Response;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Test\TestCase;
 
@@ -53,7 +54,7 @@ class TablesApiTest extends TestCase
 
         $response = $this->json('POST', '/sync/getTableHash', ['config_name' => 'sync_tests']);
 
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
             dump($response->getOriginalContent());
         }
 
@@ -79,7 +80,7 @@ class TablesApiTest extends TestCase
         $response->send();
         $body = ob_get_clean();
 
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
             dump($body);
         }
 
@@ -101,7 +102,7 @@ class TablesApiTest extends TestCase
         $response->send();
         $body = ob_get_clean();
 
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== Response::HTTP_OK) {
             dump($body);
         }
 
@@ -120,7 +121,7 @@ class TablesApiTest extends TestCase
 
         $statusCode = $response->getStatusCode();
 
-        if (($statusCode !== 200) && ($statusCode !== 304)) {
+        if (($statusCode !== Response::HTTP_OK) && ($statusCode !== Response::HTTP_NOT_MODIFIED)) {
             // $response is a StreamedResponse so we can't use getContent()
             ob_start();
             $response->send();
@@ -129,6 +130,6 @@ class TablesApiTest extends TestCase
             dump($body);
         }
 
-        $this->assertSame(304, $statusCode, 'Wrong data returned');
+        $this->assertSame(Response::HTTP_NOT_MODIFIED, $statusCode, 'Wrong data returned');
     }
 }

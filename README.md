@@ -98,7 +98,7 @@ Method 1:
 Method 2:
  - Client hashes its local copy of the table
  - Client sends a getTable request to the server, including the hash
- - If the hashes are the same, there server will respond 304 Not Modified
+ - If the hashes are the same, the server will respond 304 Not Modified
  - Client imports the response, which is merged in to the existing table
 
 Tables can be hashed using a class that implements \Stickee\Sync\Interfaces\TableHasherInterface
