@@ -22,7 +22,17 @@ class JsonStreamIterator implements IteratorAggregate
      *
      * @param mixed $stream The stream to iterate
      */
-    public function __construct($stream)
+    public function __construct($stream = null)
+    {
+        $this->stream = $stream;
+    }
+
+    /**
+     * Set the stream
+     *
+     * @param mixed $stream The stream to iterate
+     */
+    public function setStream($stream)
     {
         $this->stream = $stream;
     }

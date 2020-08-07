@@ -4,6 +4,7 @@ namespace Stickee\Sync;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  */
@@ -71,7 +72,7 @@ class Client
         }
 
         if (config('sync.single_transaction')) {
-            DB::startTransaction();
+            DB::beginTransaction();
         }
 
         foreach ($tables as $configName) {

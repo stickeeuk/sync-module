@@ -13,7 +13,7 @@ class Sync extends Command
      *
      * @var string
      */
-    protected $signature = 'sync
+    protected $signature = 'sync:sync
         {--table= : The name of a table from sync.tables}
         {--directory= : The name of a directory from sync.directories}';
 
