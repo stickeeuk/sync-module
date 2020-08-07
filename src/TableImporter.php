@@ -32,7 +32,7 @@ class TableImporter
     private $importer;
 
     /**
-     * THe iterable supplying the data
+     * The iterable supplying the data
      *
      * @var iterable $iterable
      */
