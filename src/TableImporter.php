@@ -32,6 +32,13 @@ class TableImporter
     private $importer;
 
     /**
+     * The iterable supplying the data
+     *
+     * @var iterable $iterable
+     */
+    private $iterable;
+
+    /**
      * Constructor
      *
      * @param string $configName The key in config('sync.tables')
@@ -76,9 +83,9 @@ class TableImporter
             false
         );
 
-        $iterable = app()->makeWith(JsonStreamIterator::class, ['stream' => $stream]);
+        $this->iterable = app(JsonStreamIterator::class);
 
-        $this->importer = new Importer($dataMerger, $temporaryTableManager, $iterable);
+        $this->importer = new Importer($dataMerger, $temporaryTableManager, $this->iterable);
         $this->importer->initialise();
     }
 
@@ -93,8 +100,10 @@ class TableImporter
             $this->initialise();
         }
 
-        DB::transaction(function () use ($importer) {
-            $importer->run();
+        $this->iterable->setStream($stream);
+
+        DB::transaction(function () {
+            $this->importer->run();
         });
     }
 }
