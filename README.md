@@ -13,32 +13,31 @@ This module ships with a Laravel service provider which will be automatically re
 The module can be manually registered by adding this to the `providers` array in `config/app.php`:
 
 ```
-Stickee\Sync\ServiceProvider::class,
+\Stickee\Sync\ServiceProvider::class,
 ```
 
 # Usage for Servers (Sending Data)
 
 Add the routes to your `routes/api.php` by calling `\Stickee\Sync\ServiceProvider::routes();`.
-You will usually want to add a prefix and some form of authentication, for example like this:
+You will usually want to prefix the URL and add some form of authentication, for example:
 ```
-Route::prefix('sync')
+Route::middleware('auth:api')
+    ->prefix('sync')
     ->name('sync.')
-    ->middleware('auth:api')
     ->group(function () {
         \Stickee\Sync\ServiceProvider::routes();
     });
-
 ```
 
 ## Configuration
 
-Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `databases`.
+Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `directories`.
 
 # Usage for Clients (Receiving Data)
 
 ## Configuration
 
-Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `databases`.
+Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `directories`.
 Set the following in your .env file:
 
  - `SYNC_API_URL`: The server URL, e.g. `https://example.com/api/sync`
