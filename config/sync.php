@@ -17,6 +17,10 @@ return [
      |
      | A map of table names (or database.table) that can be synchronised to
      | options for that table
+     |
+     | For clients, these should be in the correct order taking into account
+     | foreign keys
+     |
      | Options:
      |  - (string) connection: The name of the database connection to use
      |    (i.e. DB::connection($name)). Default: config(database.default)
