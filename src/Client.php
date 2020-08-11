@@ -41,7 +41,7 @@ class Client
     {
         $this->client = $client;
         $this->syncService = $syncService;
-        $this->filesPerRequest = config('sync.files_per_request');
+        $this->filesPerRequest = config('sync.client.files_per_request');
     }
 
     /**
@@ -71,7 +71,7 @@ class Client
             $importers[$configName] = $importer;
         }
 
-        if (config('sync.single_transaction')) {
+        if (config('sync.client.single_transaction')) {
             DB::beginTransaction();
         }
 
@@ -79,7 +79,7 @@ class Client
             $this->updateTable($configName, $importers[$configName]);
         }
 
-        if (config('sync.single_transaction')) {
+        if (config('sync.client.single_transaction')) {
             DB::commit();
         }
     }
@@ -105,7 +105,7 @@ class Client
     protected function updateTable(string $configName, TableImporter $importer): void
     {
         $response = $this->client->post(
-            config('sync.api_url') . '/getTable',
+            config('sync.client.api_url') . '/getTable',
             [
                 'form_params' => [
                     'config_name' => $configName,
@@ -160,7 +160,7 @@ class Client
     protected function getRemoteFileHashes(string $configName): Collection
     {
         $response = $this->client->post(
-            config('sync.api_url') . '/getFileHashes',
+            config('sync.client.api_url') . '/getFileHashes',
             [
                 'form_params' => [
                     'config_name' => $configName,
@@ -182,7 +182,7 @@ class Client
     protected function updateFilesChunk(string $configName, array $files): void
     {
         $response = $this->client->post(
-            config('sync.api_url') . '/getFiles',
+            config('sync.client.api_url') . '/getFiles',
             [
                 'form_params' => [
                     'config_name' => $configName,

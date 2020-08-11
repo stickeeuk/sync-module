@@ -57,7 +57,7 @@ app()->when(\Stickee\Sync\Client::class)
     ->give(function () {
         $config = [
             'headers' => [
-                'Authorization' => 'Bearer ' . config('sync.api_key'),
+                'Authorization' => 'Bearer ' . config('sync.client.api_key'),
                 'Accept' => 'application/json',
             ],
         ];
