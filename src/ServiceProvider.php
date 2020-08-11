@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
@@ -64,6 +65,13 @@ class ServiceProvider extends BaseServiceProvider
         ]);
 
         $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
+
+        if (config('sync.client.cron_schedule')) {
+            $this->app->booted(function () {
+                $schedule = $this->app->make(Schedule::class);
+                $schedule->command('sync:sync')->cron(config('sync.client.cron_schedule'));
+            });
+        }
     }
 
     /**

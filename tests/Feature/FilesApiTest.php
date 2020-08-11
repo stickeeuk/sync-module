@@ -14,7 +14,7 @@ class FilesApiTest extends TestCase
      */
     public function test_get_hashes(): void
     {
-        $response = $this->json('POST', '/sync/getFileHashes', ['config_name' => 'sync_test']);
+        $response = $this->json('POST', '/getFileHashes', ['config_name' => 'sync_test']);
 
         if ($response->getStatusCode() !== 200) {
             dump($response->getOriginalContent());
@@ -48,7 +48,7 @@ class FilesApiTest extends TestCase
             '1/2/2.png',
         ];
 
-        $response = $this->post('/sync/getFiles', ['config_name' => 'sync_test', 'files' => $files]);
+        $response = $this->post('/getFiles', ['config_name' => 'sync_test', 'files' => $files]);
 
         // $response is a StreamedResponse so we can't use getContent()
         ob_start();
@@ -71,7 +71,7 @@ class FilesApiTest extends TestCase
         $this->expectException(LogicException::class);
         $files = ['../README.md'];
 
-        $response = $this->post('/sync/getFiles', ['config_name' => 'sync_test', 'files' => $files]);
+        $response = $this->post('/getFiles', ['config_name' => 'sync_test', 'files' => $files]);
         $response->send();
     }
 }

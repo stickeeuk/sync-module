@@ -1,7 +1,7 @@
 {
     "name": "stickee/sync",
     "description": "Stickee sync module - synchronise database tables",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "keywords": [
         "sync"
     ],
