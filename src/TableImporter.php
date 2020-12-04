@@ -71,17 +71,19 @@ class TableImporter
             ]
         );
 
-        $dataMerger = new DataMerger(
-            $connection,
-            $config['table'],
-            $temporaryTableManager->getTableName(),
-            $config['importIndexes'],
-            $config['primary'],
-            $columns,
-            [],
-            true,
-            false
-        );
+        $dataMerger = app()
+            ->makeWith(
+                DataMerger::class,
+                [
+                    'db' => $connection,
+                    'tableName' => $config['table'],
+                    'tempTableName' => $temporaryTableManager->getTableName(),
+                    'columns' => $columns,
+                ]
+            )
+            ->setImportIndexes($config['importIndexes'])
+            ->setJoinFields($config['primary'])
+            ->setAddAutoIdColumn(false);
 
         $this->iterable = app(JsonStreamIterator::class);
 

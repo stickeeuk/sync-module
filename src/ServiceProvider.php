@@ -2,8 +2,10 @@
 
 namespace Stickee\Sync;
 
+use Doctrine\DBAL\Types\Types;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Stickee\Sync\Console\Commands\Sync;
@@ -56,6 +58,10 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
+        DB::getDoctrineSchemaManager()
+            ->getDatabasePlatform()
+            ->registerDoctrineTypeMapping('enum', Types::STRING);
+
         if (!$this->app->runningInConsole()) {
             return;
         }
@@ -64,7 +70,9 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__ . '/../config/sync.php' => config_path('sync.php'),
         ]);
 
-        $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
+        if (class_exists(Factory::class)) {
+            $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
+        }
 
         if (config('sync.client.cron_schedule')) {
             $this->app->booted(function () {

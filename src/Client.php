@@ -2,7 +2,9 @@
 
 namespace Stickee\Sync;
 
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -58,29 +60,63 @@ class Client
      */
     protected function updateTables(): void
     {
-        $tables = array_keys(config('sync.tables'));
-        $importers = [];
-        $app = app();
+        collect(config('sync.tables'))
+            ->groupBy('connection', true)
+            ->each(function (Collection $tables, string $connectionName) {
+                // TableImporter::initialise() uses DDL which will close any open transactions
+                // in MySQL, so initialise them all first
+                $importers = $tables->map(function ($config, $configName) {
+                    $importer = app()->makeWith(TableImporter::class, ['configName' => $configName]);
+                    $importer->initialise();
 
-        // TableImporter::initialise() uses DDL which will close any open transactions
-        // in MySQL, so initialise them all first
-        foreach ($tables as $configName) {
-            $importer = $app->makeWith(TableImporter::class, ['configName' => $configName]);
-            $importer->initialise();
+                    return $importer;
+                });
 
-            $importers[$configName] = $importer;
+                $this->updateConnectionTables($connectionName, $importers);
+            });
+    }
+
+    /**
+     * Update all the tables for a single database connection
+     *
+     * @param string $connectionName The connection name
+     * @param \Illuminate\Support\Collection $importers The table importers
+     */
+    protected function updateConnectionTables(string $connectionName, Collection $importers): void
+    {
+        if ($importers->isEmpty()) {
+            return;
         }
 
-        if (config('sync.client.single_transaction')) {
-            DB::beginTransaction();
+        $singleTransaction = config('sync.client.single_transaction');
+        $connection = DB::connection($connectionName);
+
+        // Disable foreign key checks so we don't have to do the tables in any particular order
+        // Disable unique checks for speed (doesn't affect inserting duplicates on InnoDB)
+        $connection->statement('SET FOREIGN_KEY_CHECKS = 0');
+        $connection->statement('SET UNIQUE_CHECKS = 0');
+
+        if ($singleTransaction) {
+            $connection->beginTransaction();
         }
 
-        foreach ($tables as $configName) {
-            $this->updateTable($configName, $importers[$configName]);
-        }
+        try {
+            foreach ($importers as $configName => $importer) {
+                $this->updateTable($configName, $importer);
+            }
 
-        if (config('sync.client.single_transaction')) {
-            DB::commit();
+            if ($singleTransaction) {
+                $connection->commit();
+            }
+        } catch (Exception $e) {
+            if ($singleTransaction) {
+                $connection->rollback();
+            }
+
+            throw $e;
+        } finally {
+            $connection->statement('SET FOREIGN_KEY_CHECKS = 1');
+            $connection->statement('SET UNIQUE_CHECKS = 1');
         }
     }
 
@@ -114,8 +150,7 @@ class Client
             ]
         );
 
-        // Not modified
-        if ($response->getStatusCode() === 304) {
+        if ($response->getStatusCode() === Response::HTTP_NOT_MODIFIED) {
             return;
         }
 
