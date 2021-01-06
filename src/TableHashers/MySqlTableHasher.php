@@ -44,11 +44,14 @@ class MySqlTableHasher implements TableHasherInterface
         $fields = [];
         $tableDescription = $this->tableDescriber->describe($configName);
 
+        $dbConnection = DB::connection($config['connection']);
+        $dbGrammar = $dbConnection->getQueryGrammar();
+
         foreach ($tableDescription['columns'] as $column) {
-            $fields[] = 'IFNULL(' . $column['name'] . ', "' . ServiceProvider::NULL_VALUE . '")';
+            $columnName = $dbGrammar->wrap($column['name']);
+            $fields[] = 'IFNULL(' . $columnName . ', "' . ServiceProvider::NULL_VALUE . '")';
         }
 
-        $dbConnection = DB::connection($config['connection']);
         $dbConnection->statement('SET @crc := ""');
 
         $dbConnection->statement(
