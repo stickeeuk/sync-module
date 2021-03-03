@@ -85,7 +85,7 @@ The easiest way to make changes is to make the project you're importing the modu
     ]
     ```
     where "../sync" is the path to where you have this project checked out
-3. `composer require stickee/sync:dev-master`
+3. `composer require stickee/sync@dev`
 
 **NOTE:** Do not check in your `composer.json` like this!
 
