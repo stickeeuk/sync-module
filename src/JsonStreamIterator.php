@@ -18,6 +18,13 @@ class JsonStreamIterator implements IteratorAggregate
     private $stream;
 
     /**
+     * The renames to apply
+     *
+     * @param array $renames
+     */
+    private $renames = [];
+
+    /**
      * Constructor
      *
      * @param mixed $stream The stream to iterate
@@ -38,6 +45,16 @@ class JsonStreamIterator implements IteratorAggregate
     }
 
     /**
+     * Set the renames
+     *
+     * @param array $renames The renames to apply
+     */
+    public function setRenames($renames)
+    {
+        $this->renames = $renames;
+    }
+
+    /**
      * Get the iterator
      *
      * @return iterable
@@ -45,7 +62,16 @@ class JsonStreamIterator implements IteratorAggregate
     public function getIterator(): iterable
     {
         while (($line = fgets($this->stream)) !== false) {
-            yield json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+            $lineData = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+
+            if ($this->renames) {
+                foreach ($this->renames as $from => $to) {
+                    $lineData[$to] = $lineData[$from];
+                    unset($lineData[$from]);
+                }
+            }
+
+            yield $lineData;
         }
 
         if (!feof($this->stream)) {
