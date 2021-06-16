@@ -86,7 +86,7 @@ class TableImporter
             ->setAddAutoIdColumn(false);
 
         $this->iterable = app(JsonStreamIterator::class);
-        $this->iterable->setRenames($config['renames'] ?? []);
+        $this->iterable->setRenames($config['config']['renames'] ?? []);
 
         $this->importer = new Importer($dataMerger, $temporaryTableManager, $this->iterable);
         $this->importer->initialise();
