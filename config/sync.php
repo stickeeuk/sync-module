@@ -17,6 +17,8 @@ return [
      |  - (string|array) importIndexes: Indexes to join on when importing data.
           Default: "PRIMARY"
      |  - (string) tableName: The table name, if different to the key
+     |  - (array) renames: Array of field renames to do in the format: FROM => TO
+     |    Default: []
      |
      | Example:
      | [
@@ -27,6 +29,7 @@ return [
      |         'connection' => 'my_connection'
      |         'primary' => ['type', 'code'],
      |      ],
+     |     'table_3' => ['renames' => ['remote_field' => 'local_field']],
      | ]
      */
     'tables' => [],
