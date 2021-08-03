@@ -7,5 +7,7 @@ $factory->define(SyncTest::class, function (Faker $faker) {
     return [
         'test_1' => $faker->randomNumber,
         'test_2' => $faker->sentence,
+        'test_3' => $faker->optional()->sentence,
+        'test_4' => $faker->optional()->randomElement(['A', 'B', 'C']),
     ];
 });

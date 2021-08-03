@@ -2,10 +2,8 @@
 
 namespace Stickee\Sync;
 
-use Doctrine\DBAL\Types\Types;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Stickee\Sync\Console\Commands\Sync;
@@ -58,10 +56,6 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        DB::getDoctrineSchemaManager()
-            ->getDatabasePlatform()
-            ->registerDoctrineTypeMapping('enum', Types::STRING);
-
         if (!$this->app->runningInConsole()) {
             return;
         }
