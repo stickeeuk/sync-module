@@ -18,6 +18,7 @@ class SyncCreateTables extends Migration
             $table->integer('test_1');
             $table->string('test_2');
             $table->string('test_3')->nullable();
+            $table->enum('test_4', ['A', 'B', 'C'])->nullable();
         });
     }
 

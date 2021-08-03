@@ -67,7 +67,7 @@ class DatabaseTest extends TestCase
         $hash = $tableHasher->hash('sync_tests');
 
         $this->assertEquals(SqliteTableHasher::class, get_class($tableHasher), 'Wrong class created for SQLite');
-        $this->assertEquals('e022fe6a4e3352603ce26d4c13792f431ab21282', $hash, 'Wrong hash for SQLite');
+        $this->assertEquals('ddbb661caec115579989a3a063f75cb8c66061e2', $hash, 'Wrong hash for SQLite');
     }
 
     /**
@@ -81,6 +81,6 @@ class DatabaseTest extends TestCase
         $hash = $tableHasher->hash('sync_tests');
 
         $this->assertEquals(MySqlTableHasher::class, get_class($tableHasher), 'Wrong class created for MySQL');
-        $this->assertEquals('e022fe6a4e3352603ce26d4c13792f431ab21282', $hash, 'Wrong hash for MySQL');
+        $this->assertEquals('ddbb661caec115579989a3a063f75cb8c66061e2', $hash, 'Wrong hash for MySQL');
     }
 }
