@@ -36,7 +36,7 @@ class FileImporter
             }
 
             $meta = json_decode($metaJson);
-            $data = fread($stream, $meta->size);
+            $data = $meta->size ? fread($stream, $meta->size) : '';
 
             if ($data === false) {
                 throw new Exception('fread error');
