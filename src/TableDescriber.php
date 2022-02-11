@@ -22,15 +22,15 @@ class TableDescriber implements TableDescriberInterface
      */
     public function describe(string $configName): array
     {
+        $config = $this->getTableInfo($configName);
+        $connection = DB::connection($config['connection']);
+
         // Make sure enums will work
-        DB::getDoctrineSchemaManager()
+        $connection->getDoctrineSchemaManager()
             ->getDatabasePlatform()
             ->registerDoctrineTypeMapping('enum', Types::STRING);
 
-        $config = $this->getTableInfo($configName);
-
-        $schema = DB::connection($config['connection'])->getSchemaBuilder();
-
+        $schema = $connection->getSchemaBuilder();
         $columns = $schema->getColumnListing($config['table']);
         $result = ['columns' => []];
 
