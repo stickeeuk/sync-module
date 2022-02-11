@@ -105,7 +105,10 @@ class TableImporter
 
         $this->iterable->setStream($stream);
 
-        DB::transaction(function () {
+        $config = $this->getTableInfo($this->configName);
+        $connection = DB::connection($config['connection']);
+
+        $connection->transaction(function () {
             $this->importer->run();
         });
     }
