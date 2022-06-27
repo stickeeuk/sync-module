@@ -16,7 +16,7 @@ class FileExporterTest extends TestCase
     {
         $stream = fopen('php://memory', 'w+');
         $fileExporter = app(FileExporter::class);
-        $disk = Storage::disk(config('sync.directories.sync_test.disk'));
+        $disk = Storage::disk(config('sync-server.directories.sync_test.disk'));
         $files = $disk->allFiles('');
         $allMeta = [];
 

@@ -2,17 +2,7 @@
 
 namespace Stickee\Sync\Test\Unit;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
-use Stickee\Sync\Interfaces\TableDescriberInterface;
-use Stickee\Sync\Interfaces\TableHasherInterface;
-use Stickee\Sync\Models\SyncTest;
-use Stickee\Sync\TableDescribers\MySqlTableDescriber;
-use Stickee\Sync\TableDescribers\SqliteTableDescriber;
 use Stickee\Sync\TableExporter;
-use Stickee\Sync\TableHashers\MySqlTableHasher;
-use Stickee\Sync\TableHashers\SqliteTableHasher;
 use Stickee\Sync\Test\TestCase;
 
 class TableExporterTest extends TestCase
@@ -30,7 +20,7 @@ class TableExporterTest extends TestCase
         // Use a small chunk size so we can test the chunking is working
         $tableExporter->chunkSize = 2;
 
-        $tableExporter->export($stream, 'sync_tests');
+        $tableExporter->export($stream, 'test_table');
 
         fseek($stream, 0);
         $data = stream_get_contents($stream);

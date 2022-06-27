@@ -11,27 +11,29 @@ trait UsesTables
     /**
      * Check if a config name exists
      *
-     * @param string $configName The name in config('sync.tables')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
      */
-    protected function checkTableConfig(string $configName)
+    protected function checkTableConfig(string $configType, string $configName)
     {
-        if (!isset(config('sync.tables')[$configName])) {
-            throw new InvalidArgumentException('"' . $configName . '" is not in sync.tables');
+        if (!isset(config($configType.'.tables')[$configName])) {
+            throw new InvalidArgumentException('"' . $configName . '" is not in ' . $configType . '.tables');
         }
     }
 
     /**
      * Get information about a table
      *
-     * @param string $configName The name in config('sync.tables')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
      *
      * @return array
      */
-    protected function getTableInfo(string $configName): array
+    protected function getTableInfo(string $configType, string $configName): array
     {
-        $this->checkTableConfig($configName);
+        $this->checkTableConfig($configType, $configName);
 
-        $config = config('sync.tables')[$configName];
+        $config = config($configType . '.tables')[$configName];
         $primary = $config['primary'] ?? ['id'];
 
         if (!is_array($primary)) {

@@ -30,7 +30,7 @@ class GetFileHashesRequest extends FormRequest
             'config_name' => [
                 'required',
                 'string',
-                Rule::in(array_keys(config('sync.directories'))),
+                Rule::in(array_keys(config('sync-server.directories'))),
             ],
         ];
     }
@@ -43,7 +43,7 @@ class GetFileHashesRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Config name not in sync.directories',
+            'config_name.in' => 'Config name not in sync-server.directories',
         ];
     }
 

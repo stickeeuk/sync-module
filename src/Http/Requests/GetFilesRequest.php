@@ -30,7 +30,7 @@ class GetFilesRequest extends FormRequest
             'config_name' => [
                 'required',
                 'string',
-                Rule::in(array_keys(config('sync.directories'))),
+                Rule::in(array_keys(config('sync-server.directories'))),
             ],
             'files' => 'required|array',
             'files.*' => 'required|string',
@@ -45,7 +45,7 @@ class GetFilesRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Config name not in sync.directories',
+            'config_name.in' => 'Config name not in sync-server.directories',
         ];
     }
 

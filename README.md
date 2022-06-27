@@ -2,6 +2,8 @@
 
 This a composer module for synchronising files or database tables between two servers.
 
+> NOTE: Foreign key checks are disabled during import
+
 ## Installation
 
 `composer require stickee/sync`
@@ -31,19 +33,21 @@ Route::middleware('auth:api')
 
 ## Configuration
 
-Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `directories`.
+Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration files,
+then fill in `tables` and `directories` in `sync-server.php`.
 
 # Usage for Clients (Receiving Data)
 
 ## Configuration
 
-Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration file, then fill in `tables` and `directories`.
+Run `php artisan vendor:publish --provider="Stickee\Sync\ServiceProvider"` to publish the configuration files,
+then fill in `tables` and `directories` in `sync-client.php`.
 Set the following in your .env file:
 
  - `SYNC_API_URL`: The server URL, e.g. `https://example.com/api/sync`
 
 If you have added authentication, then you will need to make the Guzzle client authenticate.
-For api-token authenticaion, add this to you `config/sync.php`
+For api-token authenticaion, add this to you `config/sync-client.php`
 ```
 'api_key' => env('SYNC_API_KEY'),
 ```
@@ -57,7 +61,7 @@ app()->when(\Stickee\Sync\Client::class)
     ->give(function () {
         $config = [
             'headers' => [
-                'Authorization' => 'Bearer ' . config('sync.client.api_key'),
+                'Authorization' => 'Bearer ' . config('sync-client.api_key'),
                 'Accept' => 'application/json',
             ],
         ];

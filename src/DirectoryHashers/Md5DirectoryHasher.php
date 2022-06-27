@@ -15,15 +15,16 @@ class Md5DirectoryHasher implements DirectoryHasherInterface
     use UsesDirectories;
 
     /**
-     * Hash a directory specified in config('sync.directories')
+     * Hash a directory specified in config('sync-client.directories') or config('sync-server.directories')
      *
-     * @param string $configName The key from config('sync.directories')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key from config('sync-client.directories') or config('sync-server.directories')
      *
      * @return array A map of file => hash
      */
-    public function hash(string $configName): array
+    public function hash(string $configType, string $configName): array
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo($configType, $configName);
 
         $disk = Storage::disk($config['disk']);
         $isLocal = $disk->getDriver()->getAdapter() instanceof Local;

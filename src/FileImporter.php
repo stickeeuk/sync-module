@@ -53,11 +53,11 @@ class FileImporter
      * Import a file stream to a directory
      *
      * @param mixed $stream The stream to read from
-     * @param string $configName The key in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories')
      */
     public function importToDirectory($stream, string $configName): void
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo('sync-client', $configName);
 
         $disk = Storage::disk($config['disk']);
 

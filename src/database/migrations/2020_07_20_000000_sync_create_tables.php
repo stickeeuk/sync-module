@@ -20,6 +20,14 @@ class SyncCreateTables extends Migration
             $table->string('test_3')->nullable();
             $table->enum('test_4', ['A', 'B', 'C'])->nullable();
         });
+
+        Schema::create('sync_tests_client', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('test_1');
+            $table->string('test_2');
+            $table->string('test_3')->nullable();
+            $table->enum('test_4', ['A', 'B', 'C'])->nullable();
+        });
     }
 
     /**
@@ -30,5 +38,6 @@ class SyncCreateTables extends Migration
     public function down()
     {
         Schema::dropIfExists('sync_tests');
+        Schema::dropIfExists('sync_tests_client');
     }
 }

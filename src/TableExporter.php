@@ -22,11 +22,11 @@ class TableExporter
      * Export a table to a stream
      *
      * @param mixed $stream The stream to write to
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configName The key in config('sync-server.tables')
      */
     public function export($stream, string $configName): void
     {
-        $config = $this->getTableInfo($configName);
+        $config = $this->getTableInfo('sync-server', $configName);
 
         $query = DB::connection($config['connection'])
             ->table($config['table']);

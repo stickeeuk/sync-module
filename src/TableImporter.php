@@ -18,7 +18,7 @@ class TableImporter
     use UsesTables;
 
     /**
-     * The key in config('sync.tables')
+     * The key in config('sync-client.tables')
      *
      * @var string $configName
      */
@@ -41,7 +41,7 @@ class TableImporter
     /**
      * Constructor
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configName The key in config('sync-client.tables')
      */
     public function __construct(string $configName)
     {
@@ -53,11 +53,11 @@ class TableImporter
      */
     public function initialise(): void
     {
-        $config = $this->getTableInfo($this->configName);
+        $config = $this->getTableInfo('sync-client', $this->configName);
         $connection = DB::connection($config['connection']);
 
         $tableDescriber = app(TableDescriber::class);
-        $tableDescription = $tableDescriber->describe($this->configName);
+        $tableDescription = $tableDescriber->describe('sync-client', $this->configName);
         $columns = collect($tableDescription['columns'])
             ->pluck('name')
             ->all();
@@ -105,7 +105,7 @@ class TableImporter
 
         $this->iterable->setStream($stream);
 
-        $config = $this->getTableInfo($this->configName);
+        $config = $this->getTableInfo('sync-client', $this->configName);
         $connection = DB::connection($config['connection']);
 
         $connection->transaction(function () {

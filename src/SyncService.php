@@ -19,26 +19,27 @@ class SyncService
     /**
      * Get the hash of a table
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
      *
      * @return string
      */
-    public function getTableHash(string $configName): string
+    public function getTableHash(string $configType, string $configName): string
     {
-        $config = $this->getTableInfo($configName);
+        $config = $this->getTableInfo($configType, $configName);
 
         $tableHasher = app()->makeWith(
             TableHasherInterface::class,
             ['connection' => $config['connection']]
         );
 
-        return $tableHasher->hash($configName);
+        return $tableHasher->hash($configType, $configName);
     }
 
     /**
      * Export a table to a stream
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
      * @param mixed $stream The stream to write to
      */
     public function exportTable(string $configName, $stream): void
@@ -50,29 +51,30 @@ class SyncService
     /**
      * Get file hashes
      *
-     * @param string $configName The key in config('sync.directories')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key in config('sync-client.directories') or config('sync-server.directories')
      *
      * @return \Illuminate\Support\Collection A map of file => hash
      */
-    public function getFileHashes(string $configName): Collection
+    public function getFileHashes(string $configType, string $configName): Collection
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo($configType, $configName);
 
         $directoryHasher = app($config['hasher']);
 
-        return collect($directoryHasher->hash($configName));
+        return collect($directoryHasher->hash($configType, $configName));
     }
 
     /**
      * Export files to a stream
      *
-     * @param string $configName The key in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories') or config('sync-server.directories')
      * @param array $files The files to export
      * @param mixed $stream The stream to write to
      */
     public function exportFiles(string $configName, array $files, $stream): void
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo('sync-server', $configName);
         $fileExporter = app(FileExporter::class);
         $fileExporter->export($stream, $configName, $files);
     }
@@ -80,13 +82,13 @@ class SyncService
     /**
      * Delete files that no longer exist on the server
      *
-     * @param string $configName The key in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories') or config('sync-server.directories')
      * @param \Illuminate\Support\Collection $localHashes A map of file => hash on the client
      * @param \Illuminate\Support\Collection $remoteHashes A map of file => hash on the server
      */
     public function deleteRemovedFiles(string $configName, Collection $localHashes, Collection $remoteHashes): void
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo('sync-client', $configName);
         $disk = Storage::disk($config['disk']);
 
         foreach ($localHashes as $file => $hash) {

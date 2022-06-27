@@ -31,7 +31,7 @@ class GetTableRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::in(array_keys(config('sync.tables'))),
+                Rule::in(array_keys(config('sync-server.tables'))),
             ],
             'hash' => 'sometimes|string|max:255',
         ];
@@ -45,7 +45,7 @@ class GetTableRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Config name not in sync.tables',
+            'config_name.in' => 'Config name not in sync-server.tables',
         ];
     }
 

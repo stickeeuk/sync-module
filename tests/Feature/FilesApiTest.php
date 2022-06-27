@@ -39,7 +39,7 @@ class FilesApiTest extends TestCase
      */
     public function test_get_files(): void
     {
-        $disk = Storage::disk(config('sync.directories.sync_test.disk'));
+        $disk = Storage::disk(config('sync-client.directories.sync_test.disk'));
         $expected = $disk->read('test-stream.bin');
         $files = [
             '0.png',

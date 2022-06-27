@@ -7,9 +7,10 @@ interface TableDescriberInterface
     /**
      * Get a description of a table
      *
-     * @param string $table The table name
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
      *
      * @return array
      */
-    function describe(string $table): array;
+    function describe(string $configType, string $configName): array;
 }
