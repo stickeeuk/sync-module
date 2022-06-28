@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Stickee\Sync\Console\Commands\Sync;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Http\Controllers\SyncController;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Interfaces\TableHasherInterface;
@@ -38,9 +39,8 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/sync.php', 'sync'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/../config/sync-client.php', Helpers::CLIENT_CONFIG);
+        $this->mergeConfigFrom(__DIR__ . '/../config/sync-server.php', Helpers::SERVER_CONFIG);
 
         $this->app->bind(TableDescriberInterface::class, TableDescriber::class);
 
@@ -61,17 +61,18 @@ class ServiceProvider extends BaseServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../config/sync.php' => config_path('sync.php'),
+            __DIR__ . '/../config/sync-client.php' => config_path('sync-client.php'),
+            __DIR__ . '/../config/sync-server.php' => config_path('sync-server.php'),
         ]);
 
         if (class_exists(Factory::class)) {
             $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
         }
 
-        if (config('sync.client.cron_schedule')) {
+        if (Helpers::clientConfig('cron_schedule')) {
             $this->app->booted(function () {
                 $schedule = $this->app->make(Schedule::class);
-                $schedule->command('sync:sync')->cron(config('sync.client.cron_schedule'));
+                $schedule->command('sync:sync')->cron(Helpers::clientConfig('cron_schedule'));
             });
         }
     }

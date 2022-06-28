@@ -41,16 +41,16 @@ class SqliteTableHasher implements TableHasherInterface
     /**
      * Get a hash of the data in a table
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
      *
      * @return string
      */
-    public function hash(string $configName): string
+    public function hash(string $configType, string $configName): string
     {
-        $config = $this->getTableInfo($configName);
-
+        $config = $this->getTableInfo($configType, $configName);
         $fields = [];
-        $tableDescription = $this->tableDescriber->describe($configName);
+        $tableDescription = $this->tableDescriber->describe($configType, $configName);
 
         foreach ($tableDescription['columns'] as $column) {
             $fields[] = $column['name'];

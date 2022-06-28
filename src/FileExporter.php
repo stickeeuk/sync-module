@@ -3,6 +3,7 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
@@ -15,12 +16,12 @@ class FileExporter
      * Export files to a stream
      *
      * @param mixed $stream The stream to write to
-     * @param string $configName The name in config('sync.directories')
+     * @param string $configName The key in config('sync-server.directories')
      * @param array $files The files to copy to the stream
      */
     public function export($stream, string $configName, array $files): void
     {
-        $config = $this->getDirectoryInfo($configName);
+        $config = $this->getDirectoryInfo(Helpers::SERVER_CONFIG, $configName);
 
         // Export a stream in the format
         // 1. Metadata size (32 bits)

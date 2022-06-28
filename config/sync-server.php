@@ -7,8 +7,8 @@ return [
      | Tables that are allowed to be synchronised
      |--------------------------------------------------------------------------
      |
-     | A map of table names (or database.table) that can be synchronised to
-     | options for that table
+     | A map of <table>/<database>.<table>/arbitrary-name => options for that table
+     | If the key is an arbitrary name then the "table" option must be specified
      | Options:
      |  - (string) connection: The name of the database connection to use
      |    (i.e. DB::connection($name)). Default: config(database.default)
@@ -16,7 +16,7 @@ return [
      |    the primary key. Default: "id"
      |  - (string|array) importIndexes: Indexes to join on when importing data.
           Default: "PRIMARY"
-     |  - (string) tableName: The table name, if different to the key
+     |  - (string) table: The table name, if different to the key
      |  - (array) renames: Array of field renames to do in the format: FROM => TO
      |    Default: []
      |
@@ -41,9 +41,9 @@ return [
      |
      | A map of (arbitrary) name to options
      | Options:
-     |  - (string) disk: The disk to read from (server) or write to (client). Required
+     |  - (string) disk: The disk to read from. Required
      |  - (string) hasher: The \Stickee\Sync\Interfaces\DirectoryHasherInterface class
-     |    to use. Default: config('sync.default_file_hasher')
+     |    to use. Default: config('sync-server.default_file_hasher')
      */
     'directories' => [],
 
@@ -55,44 +55,4 @@ return [
      | The default file hasher class
      */
     'default_file_hasher' => \Stickee\Sync\DirectoryHashers\Md5DirectoryHasher::class,
-
-    // Client-related options
-    'client' => [
-         /*
-         |--------------------------------------------------------------------------
-         | API URL
-         |--------------------------------------------------------------------------
-         |
-         | The sync API URL for clients to connect to, e.g. http://example.com/api/sync
-         */
-        'api_url' => env('SYNC_API_URL'),
-
-        /*
-         |--------------------------------------------------------------------------
-         | Files per request
-         |--------------------------------------------------------------------------
-         |
-         | The number of files for the client to download per HTTP request
-         */
-        'files_per_request' => 10,
-
-        /*
-         |--------------------------------------------------------------------------
-         | Single transaction
-         |--------------------------------------------------------------------------
-         |
-         | Perform all table updates in a single transaction
-         */
-        'single_transaction' => true,
-
-        /*
-         |--------------------------------------------------------------------------
-         | Cron schedule
-         |--------------------------------------------------------------------------
-         |
-         | How often to run php artisan sync:sync
-         */
-        'cron_schedule' => env('SYNC_CRON_SCHEDULE', '*/5 * * * *'),
-
-    ],
 ];

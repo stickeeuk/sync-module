@@ -2,7 +2,6 @@
 
 namespace Stickee\Sync\Test\Unit;
 
-use Exception;
 use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\FileImporter;
 use Stickee\Sync\Test\TestCase;
@@ -15,7 +14,7 @@ class FileImporterTest extends TestCase
     public function test_file_importer(): void
     {
         $fileImporter = app(FileImporter::class);
-        $disk = Storage::disk(config('sync.directories.sync_test.disk'));
+        $disk = Storage::disk(config('sync-client.directories.sync_test.disk'));
         $stream = $disk->readStream('test-stream.bin');
         $allMeta = [
             [

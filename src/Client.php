@@ -43,7 +43,7 @@ class Client
     {
         $this->client = $client;
         $this->syncService = $syncService;
-        $this->filesPerRequest = config('sync.client.files_per_request');
+        $this->filesPerRequest = Helpers::clientConfig('files_per_request');
     }
 
     /**
@@ -60,7 +60,7 @@ class Client
      */
     protected function updateTables(): void
     {
-        collect(config('sync.tables'))
+        collect(Helpers::clientConfig('tables'))
             ->groupBy('connection', true)
             ->each(function (Collection $tables, string $connectionName) {
                 // TableImporter::initialise() uses DDL which will close any open transactions
@@ -88,7 +88,7 @@ class Client
             return;
         }
 
-        $singleTransaction = config('sync.client.single_transaction');
+        $singleTransaction = Helpers::clientConfig('single_transaction');
         $connection = DB::connection($connectionName);
 
         // Disable foreign key checks so we don't have to do the tables in any particular order
@@ -125,7 +125,7 @@ class Client
      */
     protected function updateFiles(): void
     {
-        $directories = array_keys(config('sync.directories'));
+        $directories = array_keys(Helpers::clientConfig('directories'));
 
         foreach ($directories as $directory) {
             $this->updateDirectory($directory);
@@ -135,17 +135,17 @@ class Client
     /**
      * Synchronise a single table
      *
-     * @param string $configName The name in config('sync.tables')
+     * @param string $configName The key in config('sync-client.tables')
      * @param \Stickee\Sync\TableImporter The table importer
      */
     protected function updateTable(string $configName, TableImporter $importer): void
     {
         $response = $this->client->post(
-            config('sync.client.api_url') . '/getTable',
+            Helpers::clientConfig('api_url') . '/getTable',
             [
                 'form_params' => [
                     'config_name' => $configName,
-                    'hash' => $this->syncService->getTableHash($configName),
+                    'hash' => $this->syncService->getTableHash(Helpers::CLIENT_CONFIG, $configName),
                 ],
             ]
         );
@@ -165,11 +165,11 @@ class Client
     /**
      * Synchronise a single directory
      *
-     * @param string $configName The name in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories')
      */
     protected function updateDirectory(string $configName): void
     {
-        $localHashes = $this->syncService->getFileHashes($configName);
+        $localHashes = $this->syncService->getFileHashes(Helpers::CLIENT_CONFIG, $configName);
         $remoteHashes = $this->getRemoteFileHashes($configName);
 
         // Delete any files that have been deleted on the server
@@ -188,14 +188,14 @@ class Client
     /**
      * Get file hashes from the server
      *
-     * @param string $configName The name in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories')
      *
      * @return \Illuminate\Support\Collection A map of path to hash
      */
     protected function getRemoteFileHashes(string $configName): Collection
     {
         $response = $this->client->post(
-            config('sync.client.api_url') . '/getFileHashes',
+            Helpers::clientConfig('api_url') . '/getFileHashes',
             [
                 'form_params' => [
                     'config_name' => $configName,
@@ -211,13 +211,13 @@ class Client
     /**
      * Update some files
      *
-     * @param string $configName The name in config('sync.directories')
+     * @param string $configName The key in config('sync-client.directories')
      * @param array $files The files to update
      */
     protected function updateFilesChunk(string $configName, array $files): void
     {
         $response = $this->client->post(
-            config('sync.client.api_url') . '/getFiles',
+            Helpers::clientConfig('api_url') . '/getFiles',
             [
                 'form_params' => [
                     'config_name' => $configName,
@@ -232,6 +232,7 @@ class Client
         $f = fopen('php://memory', 'w+');
         fwrite($f, (string)$response->getBody());
         fseek($f, 0);
+
         $importer->importToDirectory($f, $configName);
     }
 }

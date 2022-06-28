@@ -102,12 +102,18 @@ abstract class TestCase extends Orchestra
             ]),
         ]);
 
-        $app['config']->set('sync.tables', ['sync_tests' => []]);
+        $app['config']->set('sync-client.tables', ['test_table' => ['table' => 'sync_tests_client']]);
+        $app['config']->set('sync-server.tables', ['test_table' => ['table' => 'sync_tests']]);
         $app['config']->set('filesystems.disks.sync_test', [
             'driver' => 'local',
             'root' => __DIR__ . '/../test-data',
         ]);
-        $app['config']->set('sync.directories', [
+        $app['config']->set('sync-client.directories', [
+            'sync_test' => [
+                'disk' => 'sync_test',
+            ],
+        ]);
+        $app['config']->set('sync-server.directories', [
             'sync_test' => [
                 'disk' => 'sync_test',
             ],

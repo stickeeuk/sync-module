@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use Stickee\Sync\Helpers;
 
 class GetFileHashesRequest extends FormRequest
 {
@@ -30,7 +31,7 @@ class GetFileHashesRequest extends FormRequest
             'config_name' => [
                 'required',
                 'string',
-                Rule::in(array_keys(config('sync.directories'))),
+                Rule::in(array_keys(Helpers::serverConfig('directories'))),
             ],
         ];
     }
@@ -43,7 +44,7 @@ class GetFileHashesRequest extends FormRequest
     public function messages()
     {
         return [
-            'config_name.in' => 'Config name not in sync.directories',
+            'config_name.in' => 'Config name not in sync-server.directories',
         ];
     }
 

@@ -52,7 +52,7 @@ class TablesApiTest extends TestCase
     {
         $this->useSqlite();
 
-        $response = $this->json('POST', '/getTableHash', ['config_name' => 'sync_tests']);
+        $response = $this->json('POST', '/getTableHash', ['config_name' => 'test_table']);
 
         if ($response->getStatusCode() !== Response::HTTP_OK) {
             dump($response->getOriginalContent());
@@ -73,7 +73,7 @@ class TablesApiTest extends TestCase
     {
         $this->useSqlite();
 
-        $response = $this->json('POST', '/getTable', ['config_name' => 'sync_tests']);
+        $response = $this->json('POST', '/getTable', ['config_name' => 'test_table']);
 
         // $response is a StreamedResponse so we can't use getContent()
         ob_start();
@@ -95,7 +95,7 @@ class TablesApiTest extends TestCase
     {
         $this->useSqlite();
 
-        $response = $this->json('POST', '/getTable', ['config_name' => 'sync_tests', 'hash' => 'abc123']);
+        $response = $this->json('POST', '/getTable', ['config_name' => 'test_table', 'hash' => 'abc123']);
 
         // $response is a StreamedResponse so we can't use getContent()
         ob_start();
@@ -117,7 +117,7 @@ class TablesApiTest extends TestCase
     {
         $this->useSqlite();
 
-        $response = $this->json('POST', '/getTable', ['config_name' => 'sync_tests', 'hash' => self::HASH]);
+        $response = $this->json('POST', '/getTable', ['config_name' => 'test_table', 'hash' => self::HASH]);
 
         $statusCode = $response->getStatusCode();
 

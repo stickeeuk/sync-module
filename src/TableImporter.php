@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Stickee\Import\Importer;
 use Stickee\Import\TableManagers\AutoTableManager;
 use Stickee\Import\Utils\DataMerger;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\JsonStreamIterator;
 use Stickee\Sync\TableDescriber;
 use Stickee\Sync\Traits\UsesTables;
@@ -18,7 +19,7 @@ class TableImporter
     use UsesTables;
 
     /**
-     * The key in config('sync.tables')
+     * The key in config('sync-client.tables')
      *
      * @var string $configName
      */
@@ -41,7 +42,7 @@ class TableImporter
     /**
      * Constructor
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configName The key in config('sync-client.tables')
      */
     public function __construct(string $configName)
     {
@@ -53,11 +54,11 @@ class TableImporter
      */
     public function initialise(): void
     {
-        $config = $this->getTableInfo($this->configName);
+        $config = $this->getTableInfo(Helpers::CLIENT_CONFIG, $this->configName);
         $connection = DB::connection($config['connection']);
 
         $tableDescriber = app(TableDescriber::class);
-        $tableDescription = $tableDescriber->describe($this->configName);
+        $tableDescription = $tableDescriber->describe(Helpers::CLIENT_CONFIG, $this->configName);
         $columns = collect($tableDescription['columns'])
             ->pluck('name')
             ->all();
@@ -105,7 +106,7 @@ class TableImporter
 
         $this->iterable->setStream($stream);
 
-        $config = $this->getTableInfo($this->configName);
+        $config = $this->getTableInfo(Helpers::CLIENT_CONFIG, $this->configName);
         $connection = DB::connection($config['connection']);
 
         $connection->transaction(function () {

@@ -3,20 +3,16 @@
 namespace Stickee\Sync\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Http\Requests\GetFileHashesRequest;
 use Stickee\Sync\Http\Requests\GetFilesRequest;
 use Stickee\Sync\Http\Requests\GetTableHashRequest;
 use Stickee\Sync\Http\Requests\GetTableRequest;
 use Stickee\Sync\SyncService;
-use Stickee\Sync\Traits\UsesDirectories;
-use Stickee\Sync\Traits\UsesTables;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SyncController extends Controller
 {
-    use UsesTables;
-    use UsesDirectories;
-
     /**
      * Get a table hash
      *
@@ -28,7 +24,7 @@ class SyncController extends Controller
     public function getTableHash(GetTableHashRequest $request, SyncService $syncService): array
     {
         return [
-            'hash' => $syncService->getTableHash($request->config_name),
+            'hash' => $syncService->getTableHash(Helpers::SERVER_CONFIG, $request->config_name),
         ];
     }
 
@@ -43,7 +39,7 @@ class SyncController extends Controller
     public function getTable(GetTableRequest $request, SyncService $syncService)
     {
         if ($request->hash) {
-            $hash = $syncService->getTableHash($request->config_name);
+            $hash = $syncService->getTableHash(Helpers::SERVER_CONFIG, $request->config_name);
 
             abort_if($hash === $request->hash, 304);
         }
@@ -72,7 +68,7 @@ class SyncController extends Controller
     public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService)
     {
         return [
-            'hashes' => $syncService->getFileHashes($request->config_name),
+            'hashes' => $syncService->getFileHashes(Helpers::SERVER_CONFIG, $request->config_name),
         ];
     }
 

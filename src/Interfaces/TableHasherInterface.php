@@ -7,9 +7,10 @@ interface TableHasherInterface
     /**
      * Get a hash of the data in a table
      *
-     * @param string $configName The key in config('sync.tables')
+     * @param string $configType The config type - 'sync-client' or 'sync-server'
+     * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
      *
      * @return string
      */
-    function hash(string $configName): string;
+    function hash(string $configType, string $configName): string;
 }
