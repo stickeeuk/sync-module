@@ -57,7 +57,7 @@ class FileImporter
      */
     public function importToDirectory($stream, string $configName): void
     {
-        $config = $this->getDirectoryInfo('sync-client', $configName);
+        $config = $this->getDirectoryInfo(Helpers::CLIENT_CONFIG, $configName);
 
         $disk = Storage::disk($config['disk']);
 

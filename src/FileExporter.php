@@ -3,6 +3,7 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Traits\UsesDirectories;
 
 /**
@@ -20,7 +21,7 @@ class FileExporter
      */
     public function export($stream, string $configName, array $files): void
     {
-        $config = $this->getDirectoryInfo('sync-server', $configName);
+        $config = $this->getDirectoryInfo(Helpers::SERVER_CONFIG, $configName);
 
         // Export a stream in the format
         // 1. Metadata size (32 bits)

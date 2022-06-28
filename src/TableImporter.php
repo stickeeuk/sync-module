@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Stickee\Import\Importer;
 use Stickee\Import\TableManagers\AutoTableManager;
 use Stickee\Import\Utils\DataMerger;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\JsonStreamIterator;
 use Stickee\Sync\TableDescriber;
 use Stickee\Sync\Traits\UsesTables;
@@ -53,11 +54,11 @@ class TableImporter
      */
     public function initialise(): void
     {
-        $config = $this->getTableInfo('sync-client', $this->configName);
+        $config = $this->getTableInfo(Helpers::CLIENT_CONFIG, $this->configName);
         $connection = DB::connection($config['connection']);
 
         $tableDescriber = app(TableDescriber::class);
-        $tableDescription = $tableDescriber->describe('sync-client', $this->configName);
+        $tableDescription = $tableDescriber->describe(Helpers::CLIENT_CONFIG, $this->configName);
         $columns = collect($tableDescription['columns'])
             ->pluck('name')
             ->all();
@@ -105,7 +106,7 @@ class TableImporter
 
         $this->iterable->setStream($stream);
 
-        $config = $this->getTableInfo('sync-client', $this->configName);
+        $config = $this->getTableInfo(Helpers::CLIENT_CONFIG, $this->configName);
         $connection = DB::connection($config['connection']);
 
         $connection->transaction(function () {

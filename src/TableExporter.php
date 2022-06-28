@@ -3,6 +3,7 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\DB;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Traits\UsesTables;
 
 /**
@@ -26,7 +27,7 @@ class TableExporter
      */
     public function export($stream, string $configName): void
     {
-        $config = $this->getTableInfo('sync-server', $configName);
+        $config = $this->getTableInfo(Helpers::SERVER_CONFIG, $configName);
 
         $query = DB::connection($config['connection'])
             ->table($config['table']);

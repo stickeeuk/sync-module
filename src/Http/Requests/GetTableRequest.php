@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use Stickee\Sync\Helpers;
 
 class GetTableRequest extends FormRequest
 {
@@ -31,7 +32,7 @@ class GetTableRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::in(array_keys(config('sync-server.tables'))),
+                Rule::in(array_keys(Helpers::serverConfig('tables'))),
             ],
             'hash' => 'sometimes|string|max:255',
         ];

@@ -5,6 +5,7 @@ namespace Stickee\Sync\Console\Commands;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Stickee\Sync\Client;
+use Stickee\Sync\Helpers;
 
 class Sync extends Command
 {
@@ -29,7 +30,7 @@ class Sync extends Command
      */
     public function handle(): void
     {
-        $originalConfig = config('sync-client');
+        $originalConfig = Helpers::clientConfig();
         $client = app(Client::class);
 
         $table = $this->option('table');
@@ -40,10 +41,10 @@ class Sync extends Command
                 throw new InvalidArgumentException('Invalid table "' . $table . '"');
             }
 
-            config(['sync-client.tables' => [$table => $originalConfig['tables'][$table]]]);
+            config([Helpers::CLIENT_CONFIG . '.tables' => [$table => $originalConfig['tables'][$table]]]);
 
             if ($directory === null) {
-                config(['sync-client.directories' => []]);
+                config([Helpers::CLIENT_CONFIG . '.directories' => []]);
             }
         }
 
@@ -52,10 +53,10 @@ class Sync extends Command
                 throw new InvalidArgumentException('Invalid directory "' . $directory . '"');
             }
 
-            config(['sync-client.directories' => [$directory => $originalConfig['directories'][$directory]]]);
+            config([Helpers::CLIENT_CONFIG . '.directories' => [$directory => $originalConfig['directories'][$directory]]]);
 
             if ($table === null) {
-                config(['sync-client.tables' => []]);
+                config([Helpers::CLIENT_CONFIG . '.tables' => []]);
             }
         }
 

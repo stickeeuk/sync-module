@@ -3,6 +3,7 @@
 namespace Stickee\Sync\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Http\Requests\GetFileHashesRequest;
 use Stickee\Sync\Http\Requests\GetFilesRequest;
 use Stickee\Sync\Http\Requests\GetTableHashRequest;
@@ -23,7 +24,7 @@ class SyncController extends Controller
     public function getTableHash(GetTableHashRequest $request, SyncService $syncService): array
     {
         return [
-            'hash' => $syncService->getTableHash('sync-server', $request->config_name),
+            'hash' => $syncService->getTableHash(Helpers::SERVER_CONFIG, $request->config_name),
         ];
     }
 
@@ -38,7 +39,7 @@ class SyncController extends Controller
     public function getTable(GetTableRequest $request, SyncService $syncService)
     {
         if ($request->hash) {
-            $hash = $syncService->getTableHash('sync-server', $request->config_name);
+            $hash = $syncService->getTableHash(Helpers::SERVER_CONFIG, $request->config_name);
 
             abort_if($hash === $request->hash, 304);
         }
@@ -67,7 +68,7 @@ class SyncController extends Controller
     public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService)
     {
         return [
-            'hashes' => $syncService->getFileHashes('sync-server', $request->config_name),
+            'hashes' => $syncService->getFileHashes(Helpers::SERVER_CONFIG, $request->config_name),
         ];
     }
 

@@ -4,6 +4,7 @@ namespace Stickee\Sync;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Stickee\Sync\Helpers;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 use Stickee\Sync\Traits\UsesTables;
@@ -74,7 +75,7 @@ class SyncService
      */
     public function exportFiles(string $configName, array $files, $stream): void
     {
-        $config = $this->getDirectoryInfo('sync-server', $configName);
+        $config = $this->getDirectoryInfo(Helpers::SERVER_CONFIG, $configName);
         $fileExporter = app(FileExporter::class);
         $fileExporter->export($stream, $configName, $files);
     }
@@ -88,7 +89,7 @@ class SyncService
      */
     public function deleteRemovedFiles(string $configName, Collection $localHashes, Collection $remoteHashes): void
     {
-        $config = $this->getDirectoryInfo('sync-client', $configName);
+        $config = $this->getDirectoryInfo(Helpers::CLIENT_CONFIG, $configName);
         $disk = Storage::disk($config['disk']);
 
         foreach ($localHashes as $file => $hash) {

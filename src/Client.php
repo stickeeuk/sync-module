@@ -43,7 +43,7 @@ class Client
     {
         $this->client = $client;
         $this->syncService = $syncService;
-        $this->filesPerRequest = config('sync-client.files_per_request');
+        $this->filesPerRequest = Helpers::clientConfig('files_per_request');
     }
 
     /**
@@ -60,7 +60,7 @@ class Client
      */
     protected function updateTables(): void
     {
-        collect(config('sync-client.tables'))
+        collect(Helpers::clientConfig('tables'))
             ->groupBy('connection', true)
             ->each(function (Collection $tables, string $connectionName) {
                 // TableImporter::initialise() uses DDL which will close any open transactions
@@ -88,7 +88,7 @@ class Client
             return;
         }
 
-        $singleTransaction = config('sync-client.single_transaction');
+        $singleTransaction = Helpers::clientConfig('single_transaction');
         $connection = DB::connection($connectionName);
 
         // Disable foreign key checks so we don't have to do the tables in any particular order
@@ -125,7 +125,7 @@ class Client
      */
     protected function updateFiles(): void
     {
-        $directories = array_keys(config('sync-client.directories'));
+        $directories = array_keys(Helpers::clientConfig('directories'));
 
         foreach ($directories as $directory) {
             $this->updateDirectory($directory);
@@ -141,11 +141,11 @@ class Client
     protected function updateTable(string $configName, TableImporter $importer): void
     {
         $response = $this->client->post(
-            config('sync-client.api_url') . '/getTable',
+            Helpers::clientConfig('api_url') . '/getTable',
             [
                 'form_params' => [
                     'config_name' => $configName,
-                    'hash' => $this->syncService->getTableHash('sync-client', $configName),
+                    'hash' => $this->syncService->getTableHash(Helpers::CLIENT_CONFIG, $configName),
                 ],
             ]
         );
@@ -169,7 +169,7 @@ class Client
      */
     protected function updateDirectory(string $configName): void
     {
-        $localHashes = $this->syncService->getFileHashes('sync-client', $configName);
+        $localHashes = $this->syncService->getFileHashes(Helpers::CLIENT_CONFIG, $configName);
         $remoteHashes = $this->getRemoteFileHashes($configName);
 
         // Delete any files that have been deleted on the server
@@ -195,7 +195,7 @@ class Client
     protected function getRemoteFileHashes(string $configName): Collection
     {
         $response = $this->client->post(
-            config('sync-client.api_url') . '/getFileHashes',
+            Helpers::clientConfig('api_url') . '/getFileHashes',
             [
                 'form_params' => [
                     'config_name' => $configName,
@@ -217,7 +217,7 @@ class Client
     protected function updateFilesChunk(string $configName, array $files): void
     {
         $response = $this->client->post(
-            config('sync-client.api_url') . '/getFiles',
+            Helpers::clientConfig('api_url') . '/getFiles',
             [
                 'form_params' => [
                     'config_name' => $configName,
