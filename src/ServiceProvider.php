@@ -61,7 +61,8 @@ class ServiceProvider extends BaseServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../config/sync.php' => config_path('sync.php'),
+            __DIR__ . '/../config/sync-client.php' => config_path('sync-client.php'),
+            __DIR__ . '/../config/sync-server.php' => config_path('sync-server.php'),
         ]);
 
         if (class_exists(Factory::class)) {
