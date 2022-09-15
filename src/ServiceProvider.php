@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync;
 
+use Faker\Generator as Faker;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Route;
@@ -65,7 +66,8 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__ . '/../config/sync-server.php' => config_path('sync-server.php'),
         ]);
 
-        if (class_exists(Factory::class)) {
+        // Faker is required by the factories but won't exist if `composer install` was run with `--no-dev`
+        if (class_exists(Faker::class)) {
             $this->app->make(Factory::class)->load(__DIR__ . '/database/factories');
         }
 
