@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync\Test\Feature;
 
+use ErrorException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\Response;
 use Stickee\Sync\ServiceProvider;
@@ -121,11 +122,19 @@ class TablesApiTest extends TestCase
 
         $statusCode = $response->getStatusCode();
 
-        if (($statusCode !== Response::HTTP_OK) && ($statusCode !== Response::HTTP_NOT_MODIFIED)) {
+        if ($statusCode !== Response::HTTP_NOT_MODIFIED) {
             // $response is a StreamedResponse so we can't use getContent()
             ob_start();
             $response->send();
             $body = ob_get_clean();
+
+            if ($statusCode === Response::HTTP_OK) {
+                try {
+                    $body = gzdecode($body);
+                } catch (ErrorException $e) {
+                    // Do nothing
+                }
+            }
 
             dump($body);
         }

@@ -38,13 +38,8 @@ abstract class TestCase extends Orchestra
 
         ServiceProvider::routes();
 
-        $faker = Factory::create();
-        $faker->seed(1234);
-
         $this->useSqlite();
         $this->setUpDatabase();
-
-        $faker->seed(1234);
 
         $this->useMysql();
         $this->setUpDatabase();
@@ -56,10 +51,11 @@ abstract class TestCase extends Orchestra
     private function setUpDatabase()
     {
         $this->loadLaravelMigrations();
-        $this->loadMigrationsFrom(__DIR__ . '/../src/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../src/Database/migrations');
         $this->artisan('migrate');
 
-        $this->withFactories(__DIR__ . '/../src/database/factories');
+        $faker = Factory::create();
+        $faker->seed(1234);
 
         $this->seed(TestSeeder::class);
     }
