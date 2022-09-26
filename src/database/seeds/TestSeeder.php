@@ -14,6 +14,6 @@ class TestSeeder extends Seeder
      */
     public function run()
     {
-        factory(SyncTest::class, 10)->create();
+        SyncTest::factory()->count(10)->create();
     }
 }
