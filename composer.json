@@ -9,13 +9,13 @@
     "license": "proprietary",
     "autoload": {
         "psr-4": {
-            "Stickee\\Sync\\": "src/",
-            "Stickee\\Sync\\Seeds\\": "src/database/seeds"
+            "Stickee\\Sync\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stickee\\Sync\\Test\\": "tests"
+            "Stickee\\Sync\\Test\\": "tests",
+            "Stickee\\Sync\\Seeds\\": "src/database/seeds"
         }
     },
     "extra": {
