@@ -9,13 +9,13 @@
     "license": "proprietary",
     "autoload": {
         "psr-4": {
-            "Stickee\\Sync\\": "src/"
+            "Stickee\\Sync\\": "src/",
+            "Stickee\\Sync\\Seeds\\": "src/database/seeds"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stickee\\Sync\\Test\\": "tests",
-            "Stickee\\Sync\\Seeds\\": "src/Database/Seeds"
+            "Stickee\\Sync\\Test\\": "tests"
         }
     },
     "extra": {
@@ -26,18 +26,28 @@
         }
     },
     "require": {
-        "php": ">=7.2",
-        "illuminate/support": "^5.6 || ^6.0 || ^7.0 || ^8.0",
-        "doctrine/dbal": "^2.10 || ^3.0",
-        "stickee/import": "^2.0"
+        "php": "^7.3 || ^8.1",
+        "illuminate/support": "^8.0 || ^9.0",
+        "doctrine/dbal": "^3.3.6",
+        "stickee/import": "@dev"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0"
+        "orchestra/testbench": "^7.0"
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://repo.stickee.co.uk"
+            "type": "path",
+            "url": "../affiliates",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../import-module",
+            "options": {
+                "symlink": true
+            }
         }
     ]
 }

@@ -7,6 +7,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Stickee\Sync\TableImporter;
 
 /**
  */

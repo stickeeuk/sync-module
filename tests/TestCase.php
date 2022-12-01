@@ -3,9 +3,7 @@
 namespace Stickee\Sync\Test;
 
 use Faker\Factory;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase as Orchestra;
 use PDO;
 use Stickee\Sync\Seeds\TestSeeder;
