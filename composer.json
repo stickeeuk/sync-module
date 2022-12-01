@@ -9,13 +9,14 @@
     "license": "proprietary",
     "autoload": {
         "psr-4": {
-            "Stickee\\Sync\\": "src/"
+            "Stickee\\Sync\\": "src/",
+            "Stickee\\Sync\\Seeds\\": "src/database/seeds",
+            "Stickee\\Sync\\Database\\Factories\\": "src/database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stickee\\Sync\\Test\\": "tests",
-            "Stickee\\Sync\\Seeds\\": "src/database/seeds"
+            "Stickee\\Sync\\Test\\": "tests"
         }
     },
     "extra": {
@@ -26,8 +27,8 @@
         }
     },
     "require": {
-        "php": "^7.3 || ^8.1",
-        "illuminate/support": "^8.0 || ^9.0",
+        "php": "^8.1",
+        "illuminate/support": "^9.0",
         "doctrine/dbal": "^3.3.6",
         "stickee/import": "2.2.0"
     },
