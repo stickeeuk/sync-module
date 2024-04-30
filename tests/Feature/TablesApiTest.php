@@ -15,23 +15,23 @@ class TablesApiTest extends TestCase
      *
      * @var string HASH
      */
-    const HASH = 'ddbb661caec115579989a3a063f75cb8c66061e2';
+    const HASH = 'da937ef9a2991114184c12039310c558ec4ab24c';
 
     /**
      * Expected JSON stream
      *
      * @var string CONTENT
      */
-    const CONTENT = '{"id":"1","test_1":"49766366","test_2":"Amet iste laborum eius est dolor dolores.","test_3":null,"test_4":"C"}' . "\n"
-            . '{"id":"2","test_1":"20240141","test_2":"A quo sed fugit facilis perferendis dolores molestias.","test_3":"Veniam sed fuga aspernatur natus earum.","test_4":null}' . "\n"
-            . '{"id":"3","test_1":"137","test_2":"Incidunt nostrum quia possimus rerum id et necessitatibus architecto.","test_3":"Debitis et id nisi qui id.","test_4":"C"}' . "\n"
-            . '{"id":"4","test_1":"31","test_2":"Iusto iusto accusamus iusto similique accusantium et.","test_3":null,"test_4":"B"}' . "\n"
-            . '{"id":"5","test_1":"4625766","test_2":"Autem omnis cum molestiae vel natus ex dicta.","test_3":null,"test_4":"C"}' . "\n"
-            . '{"id":"6","test_1":"68923564","test_2":"Non quia dicta in.","test_3":null,"test_4":null}' . "\n"
-            . '{"id":"7","test_1":"9589","test_2":"Dignissimos error sit labore quos.","test_3":"Repudiandae est nostrum et voluptas consequatur delectus autem.","test_4":null}' . "\n"
-            . '{"id":"8","test_1":"5","test_2":"Et perferendis fuga a debitis.","test_3":null,"test_4":null}' . "\n"
-            . '{"id":"9","test_1":"239","test_2":"Autem deleniti ut quibusdam et eum.","test_3":null,"test_4":"B"}' . "\n"
-            . '{"id":"10","test_1":"78413","test_2":"Nihil aut nisi officiis rerum id tempore voluptate sit.","test_3":"Odit aut voluptas quasi ut.","test_4":null}' . "\n";
+    const CONTENT = '{"id":1,"test_1":7449171,"test_2":"Animi quos velit et fugiat.","test_3":null,"test_4":"A"}' . "\n"
+            . '{"id":2,"test_1":54,"test_2":"Deserunt aut ab provident perspiciatis quo omnis nostrum.","test_3":null,"test_4":"C"}' . "\n"
+            . '{"id":3,"test_1":1031881,"test_2":"Incidunt iure odit et et modi ipsum.","test_3":null,"test_4":null}' . "\n"
+            . '{"id":4,"test_1":5066,"test_2":"Aut dolores enim non facere tempora ex voluptatem.","test_3":"Quis adipisci molestias fugit deleniti distinctio eum.","test_4":null}' . "\n"
+            . '{"id":5,"test_1":7788,"test_2":"Aliquam veniam corporis dolorem mollitia deleniti nemo.","test_3":"Officia est dignissimos neque blanditiis odio veritatis excepturi.","test_4":"A"}' . "\n"
+            . '{"id":6,"test_1":91506985,"test_2":"Est alias tenetur ratione.","test_3":null,"test_4":"A"}' . "\n"
+            . '{"id":7,"test_1":5439,"test_2":"Modi rerum ex repellendus assumenda et tenetur.","test_3":"Quia perspiciatis deserunt ducimus corrupti et.","test_4":null}' . "\n"
+            . '{"id":8,"test_1":3199,"test_2":"Odit doloribus repellat officiis corporis nesciunt ut ratione iure.","test_3":"Ut rem est esse sint.","test_4":null}' . "\n"
+            . '{"id":9,"test_1":938658,"test_2":"Doloribus fugiat ut aut deserunt et.","test_3":null,"test_4":null}' . "\n"
+            . '{"id":10,"test_1":49895,"test_2":"Dolorem et ut dicta.","test_3":null,"test_4":"A"}' . "\n";
 
     use DatabaseMigrations {
         runDatabaseMigrations as originalRunDatabaseMigrations;
