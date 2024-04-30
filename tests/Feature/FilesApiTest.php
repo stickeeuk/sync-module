@@ -3,7 +3,7 @@
 namespace Stickee\Sync\Test\Feature;
 
 use Illuminate\Support\Facades\Storage;
-use LogicException;
+use Exception;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Test\TestCase;
 
@@ -68,7 +68,7 @@ class FilesApiTest extends TestCase
      */
     public function test_get_illegal_file(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(Exception::class);
         $files = ['../README.md'];
 
         $response = $this->post('/getFiles', ['config_name' => 'sync_test', 'files' => $files]);

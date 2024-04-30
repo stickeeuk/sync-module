@@ -49,7 +49,7 @@ abstract class TestCase extends Orchestra
     private function setUpDatabase()
     {
         $this->loadLaravelMigrations();
-        $this->loadMigrationsFrom(__DIR__ . '/../src/Database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../src/database/migrations');
         $this->artisan('migrate');
 
         $faker = Factory::create();
