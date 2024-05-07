@@ -27,9 +27,11 @@ class TableDescriber implements TableDescriberInterface
         $connection = DB::connection($config['connection']);
 
         // Make sure enums will work
-        $connection->getDoctrineSchemaManager()
-            ->getDatabasePlatform()
-            ->registerDoctrineTypeMapping('enum', Types::STRING);
+        if (method_exists($connection, 'getDoctrineSchemaManager')) {
+            $connection->getDoctrineSchemaManager()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', Types::STRING);
+        }
 
         $schema = $connection->getSchemaBuilder();
         $columns = $schema->getColumnListing($config['table']);
