@@ -46,7 +46,7 @@ class SyncController extends Controller
 
         return new StreamedResponse(
             function () use ($request, $syncService) {
-                $stream = fopen('php://output', 'w');
+                $stream = fopen('php://output', 'wb');
                 $syncService->exportTable($request->config_name, $stream);
                 fclose($stream);
             },
@@ -54,7 +54,8 @@ class SyncController extends Controller
             [
                 'Content-Type' => 'application/octet-stream',
                 'Content-Disposition' => 'attachment; filename="' . $request->config_name . '.txt"',
-            ]);
+            ]
+        );
     }
 
     /**
@@ -84,7 +85,7 @@ class SyncController extends Controller
     {
         return new StreamedResponse(
             function () use ($request, $syncService) {
-                $stream = fopen('php://output', 'w');
+                $stream = fopen('php://output', 'wb');
                 $syncService->exportFiles($request->config_name, $request->input('files'), $stream);
                 fclose($stream);
             },
@@ -92,6 +93,7 @@ class SyncController extends Controller
             [
                 'Content-Type' => 'application/octet-stream',
                 'Content-Disposition' => 'attachment; filename="' . $request->config_name . '.bin"',
-            ]);
+            ]
+        );
     }
 }

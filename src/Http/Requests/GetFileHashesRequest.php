@@ -51,7 +51,7 @@ class GetFileHashesRequest extends FormRequest
     /**
      * Failed validation disable redirect
      *
-     * @param Validator $validator
+     * @param \Illuminate\Contracts\Validation\Validator $validator
      */
     protected function failedValidation(Validator $validator)
     {

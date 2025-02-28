@@ -4,7 +4,6 @@ namespace Stickee\Sync;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Stickee\Sync\Helpers;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 use Stickee\Sync\Traits\UsesTables;

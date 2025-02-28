@@ -6,8 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\Traits\UsesDirectories;
 
-/**
- */
 class FileImporter
 {
     use UsesDirectories;
@@ -25,7 +23,9 @@ class FileImporter
 
             if ($packedSize === false) {
                 throw new Exception('fread error');
-            } elseif ($packedSize === '') {
+            }
+
+            if ($packedSize === '') {
                 break;
             }
 

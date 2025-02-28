@@ -6,13 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Stickee\Import\Importer;
 use Stickee\Import\TableManagers\AutoTableManager;
 use Stickee\Import\Utils\DataMerger;
-use Stickee\Sync\Helpers;
-use Stickee\Sync\JsonStreamIterator;
-use Stickee\Sync\TableDescriber;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class TableImporter
 {
     use UsesTables;
@@ -20,21 +15,21 @@ class TableImporter
     /**
      * The key in config('sync-client.tables')
      *
-     * @var string $configName
+     * @var string
      */
     private $configName;
 
     /**
      * The importer
      *
-     * @var ?\Stickee\Import\Importer $importer
+     * @var ?\Stickee\Import\Importer
      */
     private $importer;
 
     /**
      * The iterable supplying the data
      *
-     * @var ?\Stickee\Sync\JsonStreamIterator $iterable
+     * @var ?\Stickee\Sync\JsonStreamIterator
      */
     private $iterable;
 

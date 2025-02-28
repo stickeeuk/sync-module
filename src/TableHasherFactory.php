@@ -9,8 +9,6 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\TableHashers\MySqlTableHasher;
 use Stickee\Sync\TableHashers\SqliteTableHasher;
 
-/**
- */
 class TableHasherFactory
 {
     /**
@@ -33,10 +31,12 @@ class TableHasherFactory
         switch ($driver) {
             case 'mysql':
                 $class = MySqlTableHasher::class;
+
                 break;
 
             case 'sqlite':
                 $class = SqliteTableHasher::class;
+
                 break;
 
             default:

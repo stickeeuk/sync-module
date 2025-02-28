@@ -2,13 +2,10 @@
 
 namespace Stickee\Sync;
 
-use Doctrine\DBAL\Types\Types;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class TableDescriber implements TableDescriberInterface
 {
     use UsesTables;

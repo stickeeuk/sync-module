@@ -5,7 +5,6 @@ namespace Stickee\Sync;
 use Exception;
 use Generator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * Iterate over a stream that contains JSON objects separated by \n

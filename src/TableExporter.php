@@ -3,11 +3,8 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\DB;
-use Stickee\Sync\Helpers;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class TableExporter
 {
     use UsesTables;
@@ -15,7 +12,7 @@ class TableExporter
     /**
      * The number of records to get from the database at once
      *
-     * @var int $chunkSize
+     * @var int
      */
     public $chunkSize = 1000;
 

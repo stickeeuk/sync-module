@@ -7,30 +7,27 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Stickee\Sync\TableImporter;
 
-/**
- */
 class Client
 {
     /**
      * The HTTP client
      *
-     * @var \GuzzleHttp\Client $client
+     * @var \GuzzleHttp\Client
      */
     protected $client;
 
     /**
      * The sync service
      *
-     * @var \Stickee\Sync\SyncService $syncService
+     * @var \Stickee\Sync\SyncService
      */
     protected $syncService;
 
     /**
      * The number of files to get per HTTP request
      *
-     * @var int $filesPerRequest
+     * @var int
      */
     public $filesPerRequest;
 
@@ -157,8 +154,8 @@ class Client
         }
 
         // TODO: make this better
-        $f = fopen('php://memory', 'w+');
-        fwrite($f, gzdecode((string)$response->getBody()));
+        $f = fopen('php://memory', 'w+b');
+        fwrite($f, gzdecode((string) $response->getBody()));
         fseek($f, 0);
 
         $importer->import($f);
@@ -205,7 +202,7 @@ class Client
             ]
         );
 
-        $data = json_decode((string)$response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true);
 
         return collect($data['hashes']);
     }
@@ -231,8 +228,8 @@ class Client
         $importer = app(FileImporter::class);
 
         // TODO: make this better
-        $f = fopen('php://memory', 'w+');
-        fwrite($f, (string)$response->getBody());
+        $f = fopen('php://memory', 'w+b');
+        fwrite($f, (string) $response->getBody());
         fseek($f, 0);
 
         $importer->importToDirectory($f, $configName);
