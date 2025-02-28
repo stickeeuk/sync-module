@@ -11,10 +11,8 @@ class TableExporter
 
     /**
      * The number of records to get from the database at once
-     *
-     * @var int
      */
-    public $chunkSize = 1000;
+    public int $chunkSize = 1000;
 
     /**
      * Export a table to a stream

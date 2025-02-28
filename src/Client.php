@@ -12,24 +12,18 @@ class Client
 {
     /**
      * The HTTP client
-     *
-     * @var \GuzzleHttp\Client
      */
-    protected $client;
+    protected GuzzleClient $client;
 
     /**
      * The sync service
-     *
-     * @var \Stickee\Sync\SyncService
      */
-    protected $syncService;
+    protected SyncService $syncService;
 
     /**
      * The number of files to get per HTTP request
-     *
-     * @var int
      */
-    public $filesPerRequest;
+    public int $filesPerRequest;
 
     /**
      * Constructor

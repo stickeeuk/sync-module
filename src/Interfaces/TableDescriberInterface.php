@@ -12,5 +12,5 @@ interface TableDescriberInterface
      *
      * @return array
      */
-    function describe(string $configType, string $configName): array;
+    public function describe(string $configType, string $configName): array;
 }

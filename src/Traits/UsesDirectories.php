@@ -4,8 +4,6 @@ namespace Stickee\Sync\Traits;
 
 use InvalidArgumentException;
 
-/**
- */
 trait UsesDirectories
 {
     /**

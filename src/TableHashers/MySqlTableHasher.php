@@ -8,8 +8,6 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class MySqlTableHasher implements TableHasherInterface
 {
     use UsesTables;
@@ -17,7 +15,7 @@ class MySqlTableHasher implements TableHasherInterface
     /**
      * The table describer
      *
-     * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
+     * @var \Stickee\Sync\Interfaces\TableDescriberInterface
      */
     private $tableDescriber;
 

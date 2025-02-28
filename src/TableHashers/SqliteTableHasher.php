@@ -8,8 +8,6 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class SqliteTableHasher implements TableHasherInterface
 {
     use UsesTables;
@@ -17,16 +15,14 @@ class SqliteTableHasher implements TableHasherInterface
     /**
      * The table describer
      *
-     * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
+     * @var \Stickee\Sync\Interfaces\TableDescriberInterface
      */
     private $tableDescriber;
 
     /**
      * The number of records to get from the database at once
-     *
-     * @var int $chunkSize
      */
-    public $chunkSize = 1000;
+    public int $chunkSize = 1000;
 
     /**
      * Constructor
@@ -64,7 +60,7 @@ class SqliteTableHasher implements TableHasherInterface
             ->orderBy('rowid')
             ->chunk($this->chunkSize, function ($rows) use (&$hash) {
                 foreach ($rows as $row) {
-                    $row = (array)$row;
+                    $row = (array) $row;
                     array_unshift($row, $hash);
 
                     $row = array_map(function (?string $value) {

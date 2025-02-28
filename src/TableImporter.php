@@ -22,7 +22,7 @@ class TableImporter
     /**
      * The importer
      *
-     * @var ?\Stickee\Import\Importer
+     * @var \Stickee\Import\Importer|null
      */
     private $importer;
 

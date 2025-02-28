@@ -13,7 +13,7 @@ class SyncTest extends Model
     /**
      * If the model includes timestamps
      *
-     * @var bool $timestamps
+     * @var bool
      */
     public $timestamps = false;
 

@@ -14,7 +14,7 @@ class FileExporterTest extends TestCase
      */
     public function test_file_exporter(): void
     {
-        $stream = fopen('php://memory', 'w+');
+        $stream = fopen('php://memory', 'w+b');
         $fileExporter = app(FileExporter::class);
         $disk = Storage::disk(config('sync-server.directories.sync_test.disk'));
         $files = $disk->allFiles('');
@@ -32,7 +32,9 @@ class FileExporterTest extends TestCase
 
             if ($packedSize === false) {
                 throw new Exception('fread error');
-            } elseif ($packedSize === '') {
+            }
+
+            if ($packedSize === '') {
                 break;
             }
 
@@ -62,16 +64,14 @@ class FileExporterTest extends TestCase
             28,
             '{"file":"0.png","size":4340}',
             32,
-            '{"file":"1\\/1a.png","size":4340}',
+            '{"file":"1\/1a.png","size":4340}',
             32,
-            '{"file":"1\\/1b.png","size":3077}',
+            '{"file":"1\/1b.png","size":3077}',
             34,
-            '{"file":"1\\/2\\/2.png","size":4340}',
+            '{"file":"1\/2\/2.png","size":4340}',
             39,
             '{"file":"test-stream.bin","size":16239}',
-
         ];
-
 
         $this->assertEquals($expected, $allMeta, 'Wrong data returned');
     }

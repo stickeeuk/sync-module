@@ -12,5 +12,5 @@ interface TableHasherInterface
      *
      * @return string
      */
-    function hash(string $configType, string $configName): string;
+    public function hash(string $configType, string $configName): string;
 }
