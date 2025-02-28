@@ -30,7 +30,7 @@ class TableDescriber implements TableDescriberInterface
         if (method_exists($connection, 'getDoctrineSchemaManager')) {
             $connection->getDoctrineSchemaManager()
                 ->getDatabasePlatform()
-                ->registerDoctrineTypeMapping('enum', Types::STRING);
+                ->registerDoctrineTypeMapping('enum', 'string');
         }
 
         $schema = $connection->getSchemaBuilder();

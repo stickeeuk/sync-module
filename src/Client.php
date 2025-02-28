@@ -110,6 +110,7 @@ class Client
                 $connection->commit();
             }
         } catch (Exception $e) {
+            /** @phpstan-ignore if.alwaysTrue */
             if ($singleTransaction) {
                 $connection->rollback();
             }
@@ -137,7 +138,7 @@ class Client
      * Synchronise a single table
      *
      * @param string $configName The key in config('sync-client.tables')
-     * @param \Stickee\Sync\TableImporter The table importer
+     * @param \Stickee\Sync\TableImporter $importer The table importer
      */
     protected function updateTable(string $configName, TableImporter $importer): void
     {

@@ -2,7 +2,6 @@
 
 namespace Stickee\Sync;
 
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Stickee\Import\Importer;
 use Stickee\Import\TableManagers\AutoTableManager;
@@ -28,14 +27,14 @@ class TableImporter
     /**
      * The importer
      *
-     * @var \Stickee\Import\Importer $importer
+     * @var ?\Stickee\Import\Importer $importer
      */
     private $importer;
 
     /**
      * The iterable supplying the data
      *
-     * @var iterable $iterable
+     * @var ?\Stickee\Sync\JsonStreamIterator $iterable
      */
     private $iterable;
 

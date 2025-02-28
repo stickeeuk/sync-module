@@ -3,7 +3,9 @@
 namespace Stickee\Sync;
 
 use Exception;
+use Generator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Iterate over a stream that contains JSON objects separated by \n
@@ -56,10 +58,8 @@ class JsonStreamIterator implements IteratorAggregate
 
     /**
      * Get the iterator
-     *
-     * @return iterable
      */
-    public function getIterator(): iterable
+    public function getIterator(): Generator
     {
         while (($line = fgets($this->stream)) !== false) {
             $lineData = json_decode($line, true, 512, JSON_THROW_ON_ERROR);

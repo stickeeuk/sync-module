@@ -2,6 +2,7 @@
 
 namespace Stickee\Sync;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\Traits\UsesDirectories;
 
