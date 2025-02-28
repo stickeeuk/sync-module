@@ -33,6 +33,7 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * Register the service provider
      */
+    #[\Override]
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/sync-client.php', Helpers::CLIENT_CONFIG);
@@ -40,9 +41,7 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->app->bind(TableDescriberInterface::class, TableDescriber::class);
 
-        $this->app->bind(TableHasherInterface::class, function ($app, $arguments) {
-            return app(TableHasherFactory::class)->create($arguments['connection'] ?? config('database.default'));
-        });
+        $this->app->bind(TableHasherInterface::class, fn($app, $arguments) => app(TableHasherFactory::class)->create($arguments['connection'] ?? config('database.default')));
 
         $this->commands([Sync::class]);
     }
@@ -50,7 +49,7 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * Bootstrap any application services
      */
-    public function boot()
+    public function boot(): void
     {
         if (!$this->app->runningInConsole()) {
             return;
@@ -62,7 +61,7 @@ class ServiceProvider extends BaseServiceProvider
         ]);
 
         if (Helpers::clientConfig('cron_schedule')) {
-            $this->app->booted(function () {
+            $this->app->booted(function (): void {
                 $schedule = $this->app->make(Schedule::class);
                 $schedule->command('sync:sync')->cron(Helpers::clientConfig('cron_schedule'));
             });

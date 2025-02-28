@@ -34,7 +34,7 @@ class TableExporter
         // Use gzdecode() to inflate
         $context = deflate_init(ZLIB_ENCODING_GZIP, ['level' => 9]);
 
-        $query->chunk($this->chunkSize, function ($rows) use (&$stream, &$context) {
+        $query->chunk($this->chunkSize, function ($rows) use (&$stream, &$context): void {
             $rows = array_map('json_encode', $rows->all());
             fwrite($stream, deflate_add($context, implode("\n", $rows) . "\n", ZLIB_NO_FLUSH));
         });

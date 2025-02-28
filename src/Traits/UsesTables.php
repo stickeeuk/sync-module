@@ -24,8 +24,6 @@ trait UsesTables
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return array
      */
     protected function getTableInfo(string $configType, string $configName): array
     {

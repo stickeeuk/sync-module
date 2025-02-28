@@ -5,12 +5,15 @@ namespace Stickee\Sync\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Stickee\Sync\Models\SyncTest;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Stickee\Sync\Models\SyncTest>
+ */
 class SyncTestFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
-     * @var class-string<\Illuminate\Database\Eloquent\Model>
+     * @var class-string<\Stickee\Sync\Models\SyncTest>
      */
     protected $model = SyncTest::class;
 
@@ -22,10 +25,10 @@ class SyncTestFactory extends Factory
     public function definition()
     {
         return [
-            'test_1' => $this->faker->randomNumber(),
-            'test_2' => $this->faker->sentence(),
-            'test_3' => $this->faker->optional()->sentence(),
-            'test_4' => $this->faker->optional()->randomElement(['A', 'B', 'C']),
+            'test_1' => fake()->randomNumber(),
+            'test_2' => fake()->sentence(),
+            'test_3' => fake()->optional()->sentence(),
+            'test_4' => fake()->optional()->randomElement(['A', 'B', 'C']),
         ];
     }
 }

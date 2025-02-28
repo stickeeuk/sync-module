@@ -62,7 +62,7 @@ class FileImporter
 
         $disk = Storage::disk($config['disk']);
 
-        $callback = function ($meta, $data) use ($disk) {
+        $callback = function ($meta, $data) use ($disk): void {
             $disk->put($meta->file, $data);
         };
 
