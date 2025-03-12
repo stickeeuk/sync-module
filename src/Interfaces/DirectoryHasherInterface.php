@@ -12,5 +12,5 @@ interface DirectoryHasherInterface
      *
      * @return array A map of file => hash
      */
-    function hash(string $configType, string $configName): array;
+    public function hash(string $configType, string $configName): array;
 }

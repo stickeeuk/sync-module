@@ -6,8 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\Traits\UsesDirectories;
 
-/**
- */
 class FileImporter
 {
     use UsesDirectories;
@@ -25,7 +23,9 @@ class FileImporter
 
             if ($packedSize === false) {
                 throw new Exception('fread error');
-            } elseif ($packedSize === '') {
+            }
+
+            if ($packedSize === '') {
                 break;
             }
 
@@ -62,7 +62,7 @@ class FileImporter
 
         $disk = Storage::disk($config['disk']);
 
-        $callback = function ($meta, $data) use ($disk) {
+        $callback = function ($meta, $data) use ($disk): void {
             $disk->put($meta->file, $data);
         };
 

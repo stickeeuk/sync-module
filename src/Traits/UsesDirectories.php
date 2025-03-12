@@ -4,8 +4,6 @@ namespace Stickee\Sync\Traits;
 
 use InvalidArgumentException;
 
-/**
- */
 trait UsesDirectories
 {
     /**
@@ -26,8 +24,6 @@ trait UsesDirectories
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key in config('sync-client.directories') or config('sync-server.directories')
-     *
-     * @return array
      */
     protected function getDirectoryInfo(string $configType, string $configName): array
     {

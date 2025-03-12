@@ -4,7 +4,6 @@ namespace Stickee\Sync\Test\Feature;
 
 use Illuminate\Support\Facades\Storage;
 use Exception;
-use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Test\TestCase;
 
 class FilesApiTest extends TestCase
@@ -27,7 +26,7 @@ class FilesApiTest extends TestCase
                 '1/1b.png' => 'd7eba7679f8c0dd80d1689cdda97b9d7',
                 '1/2/2.png' => '49d1e469707577ed310e09f89b0848bf',
                 'test-stream.bin' => '4bfee0d8db02fdb73bb2d154ed159459',
-            ]
+            ],
         ];
 
         $response->assertOk();

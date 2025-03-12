@@ -5,20 +5,12 @@ namespace Stickee\Sync;
 use Exception;
 use Generator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * Iterate over a stream that contains JSON objects separated by \n
  */
 class JsonStreamIterator implements IteratorAggregate
 {
-    /**
-     * The stream to iterate
-     *
-     * @param mixed $stream
-     */
-    private $stream;
-
     /**
      * The renames to apply
      *
@@ -31,9 +23,8 @@ class JsonStreamIterator implements IteratorAggregate
      *
      * @param mixed $stream The stream to iterate
      */
-    public function __construct($stream = null)
+    public function __construct(private $stream = null)
     {
-        $this->stream = $stream;
     }
 
     /**
@@ -41,7 +32,7 @@ class JsonStreamIterator implements IteratorAggregate
      *
      * @param mixed $stream The stream to iterate
      */
-    public function setStream($stream)
+    public function setStream($stream): void
     {
         $this->stream = $stream;
     }
@@ -51,7 +42,7 @@ class JsonStreamIterator implements IteratorAggregate
      *
      * @param array $renames The renames to apply
      */
-    public function setRenames($renames)
+    public function setRenames($renames): void
     {
         $this->renames = $renames;
     }

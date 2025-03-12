@@ -32,7 +32,7 @@ class Md5DirectoryHasher implements DirectoryHasherInterface
         $path = $disk->path('');
 
         foreach ($files as $file) {
-            $result[$file] = $isLocal ? md5_file($path . $file) : md5($disk->get($file));
+            $result[$file] = $isLocal ? md5_file($path . $file) : md5((string) $disk->get($file));
         }
 
         return $result;

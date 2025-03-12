@@ -18,26 +18,26 @@ class FileImporterTest extends TestCase
         $stream = $disk->readStream('test-stream.bin');
         $allMeta = [
             [
-               'file' => '0.png',
-               'size' => 4340,
+                'file' => '0.png',
+                'size' => 4340,
             ],
             [
-               'file' => '1/1a.png',
-               'size' => 4340,
+                'file' => '1/1a.png',
+                'size' => 4340,
             ],
             [
-               'file' => '1/1b.png',
-               'size' => 3077,
+                'file' => '1/1b.png',
+                'size' => 3077,
             ],
             [
-               'file' => '1/2/2.png',
-               'size' => 4340,
+                'file' => '1/2/2.png',
+                'size' => 4340,
             ],
         ];
 
         $fileImporter->import($stream, function ($meta, $data) use (&$allMeta, $disk) {
             $expected = array_shift($allMeta);
-            $this->assertEquals($expected, (array)$meta, 'Wrong meta data returned');
+            $this->assertEquals($expected, (array) $meta, 'Wrong meta data returned');
             $this->assertEquals($disk->read($meta->file), $data, 'Incorrect file data for ' . $meta->file);
         });
 

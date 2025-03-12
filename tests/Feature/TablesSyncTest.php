@@ -61,14 +61,13 @@ class TablesSyncTest extends TestCase
     /**
      * Test the table doesn't match before syncing and does after
      */
-    private function testSync($srcHash): void
+    private function testSync(string $srcHash): void
     {
         $tableHasher = app(TableHasherInterface::class);
 
         $this->assertNotEquals($srcHash, $tableHasher->hash('sync-client', 'test_table'));
         $this->sync();
         $this->assertEquals($srcHash, $tableHasher->hash('sync-client', 'test_table'));
-
     }
 
     /**
@@ -90,7 +89,7 @@ class TablesSyncTest extends TestCase
         $response->send();
         $body = ob_get_clean();
 
-        $f = fopen('php://memory', 'w+');
+        $f = fopen('php://memory', 'w+b');
         fwrite($f, gzdecode($body));
         fseek($f, 0);
 
