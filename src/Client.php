@@ -11,16 +11,6 @@ use Illuminate\Support\Facades\DB;
 class Client
 {
     /**
-     * The HTTP client
-     */
-    protected GuzzleClient $client;
-
-    /**
-     * The sync service
-     */
-    protected SyncService $syncService;
-
-    /**
      * The number of files to get per HTTP request
      */
     public int $filesPerRequest;
@@ -31,10 +21,10 @@ class Client
      * @param \GuzzleHttp\Client $client The HTTP client
      * @param \Stickee\Sync\SyncService $syncService The sync service
      */
-    public function __construct(GuzzleClient $client, SyncService $syncService)
-    {
-        $this->client = $client;
-        $this->syncService = $syncService;
+    public function __construct(
+        protected GuzzleClient $client,
+        protected SyncService $syncService
+    ) {
         $this->filesPerRequest = Helpers::clientConfig('files_per_request');
     }
 
@@ -54,7 +44,7 @@ class Client
     {
         collect(Helpers::clientConfig('tables'))
             ->groupBy('connection', true)
-            ->each(function (Collection $tables, string $connectionName) {
+            ->each(function (Collection $tables, string $connectionName): void {
                 // TableImporter::initialise() uses DDL which will close any open transactions
                 // in MySQL, so initialise them all first
                 $importers = $tables->map(function ($config, $configName) {
@@ -100,13 +90,13 @@ class Client
             if ($singleTransaction) {
                 $connection->commit();
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             /** @phpstan-ignore if.alwaysTrue */
             if ($singleTransaction) {
                 $connection->rollback();
             }
 
-            throw $e;
+            throw $exception;
         } finally {
             $connection->statement('SET FOREIGN_KEY_CHECKS = 1');
             $connection->statement('SET UNIQUE_CHECKS = 1');
@@ -169,9 +159,7 @@ class Client
         $this->syncService->deleteRemovedFiles($configName, $localHashes, $remoteHashes);
 
         // Remove unchanged files from the list to download
-        $fileList = $remoteHashes->reject(function ($hash, $file) use ($localHashes) {
-            return ($hash !== '') && ($hash === ($localHashes[$file] ?? null));
-        });
+        $fileList = $remoteHashes->reject(fn($hash, $file): bool => ($hash !== '') && ($hash === ($localHashes[$file] ?? null)));
 
         foreach ($fileList->chunk($this->filesPerRequest) as $chunk) {
             $this->updateFilesChunk($configName, $chunk->keys()->all());

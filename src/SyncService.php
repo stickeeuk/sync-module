@@ -21,8 +21,6 @@ class SyncService
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return string
      */
     public function getTableHash(string $configType, string $configName): string
     {
@@ -74,7 +72,6 @@ class SyncService
      */
     public function exportFiles(string $configName, array $files, $stream): void
     {
-        $config = $this->getDirectoryInfo(Helpers::SERVER_CONFIG, $configName);
         $fileExporter = app(FileExporter::class);
         $fileExporter->export($stream, $configName, $files);
     }
