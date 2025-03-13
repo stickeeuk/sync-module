@@ -64,7 +64,6 @@ class TableImporter
                     'columns' => $columns,
                 ]
             )
-            ->setImportIndexes($config['importIndexes'])
             ->setJoinFields($config['primary'])
             ->setAddAutoIdColumn(false);
 
