@@ -2,13 +2,10 @@
 
 namespace Stickee\Sync;
 
-use Doctrine\DBAL\Types\Types;
 use Illuminate\Support\Facades\DB;
 use Stickee\Sync\Interfaces\TableDescriberInterface;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class TableDescriber implements TableDescriberInterface
 {
     use UsesTables;
@@ -18,8 +15,6 @@ class TableDescriber implements TableDescriberInterface
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return array
      */
     public function describe(string $configType, string $configName): array
     {
@@ -30,7 +25,7 @@ class TableDescriber implements TableDescriberInterface
         if (method_exists($connection, 'getDoctrineSchemaManager')) {
             $connection->getDoctrineSchemaManager()
                 ->getDatabasePlatform()
-                ->registerDoctrineTypeMapping('enum', Types::STRING);
+                ->registerDoctrineTypeMapping('enum', 'string');
         }
 
         $schema = $connection->getSchemaBuilder();

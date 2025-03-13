@@ -3,11 +3,8 @@
 namespace Stickee\Sync;
 
 use Illuminate\Support\Facades\Storage;
-use Stickee\Sync\Helpers;
 use Stickee\Sync\Traits\UsesDirectories;
 
-/**
- */
 class FileExporter
 {
     use UsesDirectories;
@@ -36,7 +33,7 @@ class FileExporter
                 'file' => $file,
                 'size' => $disk->size($file),
             ]);
-            fwrite($stream, pack('N', strlen($meta)));
+            fwrite($stream, pack('N', mb_strlen($meta, '8bit')));
             fwrite($stream, $meta);
             stream_copy_to_stream($disk->readStream($file), $stream);
         }

@@ -4,8 +4,6 @@ namespace Stickee\Sync\Traits;
 
 use InvalidArgumentException;
 
-/**
- */
 trait UsesTables
 {
     /**
@@ -16,7 +14,7 @@ trait UsesTables
      */
     protected function checkTableConfig(string $configType, string $configName)
     {
-        if (!isset(config($configType.'.tables')[$configName])) {
+        if (!isset(config($configType . '.tables')[$configName])) {
             throw new InvalidArgumentException('"' . $configName . '" is not in ' . $configType . '.tables');
         }
     }
@@ -26,8 +24,6 @@ trait UsesTables
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key in config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return array
      */
     protected function getTableInfo(string $configType, string $configName): array
     {

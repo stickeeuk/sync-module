@@ -18,8 +18,6 @@ class SyncController extends Controller
      *
      * @param \Stickee\Sync\Http\Requests\GetTableHashRequest $request The request
      * @param \Stickee\Sync\SyncService $syncService The sync service
-     *
-     * @return array
      */
     public function getTableHash(GetTableHashRequest $request, SyncService $syncService): array
     {
@@ -33,10 +31,8 @@ class SyncController extends Controller
      *
      * @param \Stickee\Sync\Http\Requests\GetTableRequest $request The request
      * @param \Stickee\Sync\SyncService $syncService The sync service
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function getTable(GetTableRequest $request, SyncService $syncService)
+    public function getTable(GetTableRequest $request, SyncService $syncService): StreamedResponse
     {
         if ($request->hash) {
             $hash = $syncService->getTableHash(Helpers::SERVER_CONFIG, $request->config_name);
@@ -45,8 +41,8 @@ class SyncController extends Controller
         }
 
         return new StreamedResponse(
-            function () use ($request, $syncService) {
-                $stream = fopen('php://output', 'w');
+            function () use ($request, $syncService): void {
+                $stream = fopen('php://output', 'wb');
                 $syncService->exportTable($request->config_name, $stream);
                 fclose($stream);
             },
@@ -54,7 +50,8 @@ class SyncController extends Controller
             [
                 'Content-Type' => 'application/octet-stream',
                 'Content-Disposition' => 'attachment; filename="' . $request->config_name . '.txt"',
-            ]);
+            ]
+        );
     }
 
     /**
@@ -62,10 +59,8 @@ class SyncController extends Controller
      *
      * @param \Stickee\Sync\Http\Requests\GetFileHashesRequest $request The request
      * @param \Stickee\Sync\SyncService $syncService The sync service
-     *
-     * @return array
      */
-    public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService)
+    public function getFileHashes(GetFileHashesRequest $request, SyncService $syncService): array
     {
         return [
             'hashes' => $syncService->getFileHashes(Helpers::SERVER_CONFIG, $request->config_name),
@@ -77,14 +72,12 @@ class SyncController extends Controller
      *
      * @param \Stickee\Sync\Http\Requests\GetFilesRequest $request The request
      * @param \Stickee\Sync\SyncService $syncService The sync service
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function getFiles(GetFilesRequest $request, SyncService $syncService)
+    public function getFiles(GetFilesRequest $request, SyncService $syncService): StreamedResponse
     {
         return new StreamedResponse(
-            function () use ($request, $syncService) {
-                $stream = fopen('php://output', 'w');
+            function () use ($request, $syncService): void {
+                $stream = fopen('php://output', 'wb');
                 $syncService->exportFiles($request->config_name, $request->input('files'), $stream);
                 fclose($stream);
             },
@@ -92,6 +85,7 @@ class SyncController extends Controller
             [
                 'Content-Type' => 'application/octet-stream',
                 'Content-Disposition' => 'attachment; filename="' . $request->config_name . '.bin"',
-            ]);
+            ]
+        );
     }
 }

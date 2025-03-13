@@ -14,7 +14,7 @@ class TableExporterTest extends TestCase
     {
         $this->useSqlite();
 
-        $stream = fopen('php://memory', 'w+');
+        $stream = fopen('php://memory', 'w+b');
         $tableExporter = app(TableExporter::class);
 
         // Use a small chunk size so we can test the chunking is working

@@ -12,20 +12,16 @@ class GetFilesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'config_name' => [
@@ -43,6 +39,7 @@ class GetFilesRequest extends FormRequest
      *
      * @return string[] The messages
      */
+    #[\Override]
     public function messages()
     {
         return [
@@ -52,9 +49,8 @@ class GetFilesRequest extends FormRequest
 
     /**
      * Failed validation disable redirect
-     *
-     * @param Validator $validator
      */
+    #[\Override]
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json($validator->errors(), 422));

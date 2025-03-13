@@ -8,34 +8,22 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class SqliteTableHasher implements TableHasherInterface
 {
     use UsesTables;
 
     /**
-     * The table describer
-     *
-     * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
-     */
-    private $tableDescriber;
-
-    /**
      * The number of records to get from the database at once
-     *
-     * @var int $chunkSize
      */
-    public $chunkSize = 1000;
+    public int $chunkSize = 1000;
 
     /**
      * Constructor
      *
      * @param \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber The table describer
      */
-    public function __construct(TableDescriberInterface $tableDescriber)
+    public function __construct(private TableDescriberInterface $tableDescriber)
     {
-        $this->tableDescriber = $tableDescriber;
     }
 
     /**
@@ -43,8 +31,6 @@ class SqliteTableHasher implements TableHasherInterface
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return string
      */
     public function hash(string $configType, string $configName): string
     {
@@ -62,14 +48,12 @@ class SqliteTableHasher implements TableHasherInterface
             ->table($config['table'])
             ->select($fields)
             ->orderBy('rowid')
-            ->chunk($this->chunkSize, function ($rows) use (&$hash) {
+            ->chunk($this->chunkSize, function ($rows) use (&$hash): void {
                 foreach ($rows as $row) {
-                    $row = (array)$row;
+                    $row = (array) $row;
                     array_unshift($row, $hash);
 
-                    $row = array_map(function (?string $value) {
-                        return $value === null ? ServiceProvider::NULL_VALUE : $value;
-                    }, $row);
+                    $row = array_map(fn(?string $value): string => $value ?? ServiceProvider::NULL_VALUE, $row);
 
                     $line = implode('|', $row);
                     $hash = sha1($line);

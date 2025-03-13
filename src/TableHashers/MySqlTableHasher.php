@@ -8,27 +8,17 @@ use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\ServiceProvider;
 use Stickee\Sync\Traits\UsesTables;
 
-/**
- */
 class MySqlTableHasher implements TableHasherInterface
 {
     use UsesTables;
-
-    /**
-     * The table describer
-     *
-     * @var \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber
-     */
-    private $tableDescriber;
 
     /**
      * Constructor
      *
      * @param \Stickee\Sync\Interfaces\TableDescriberInterface $tableDescriber The table describer
      */
-    public function __construct(TableDescriberInterface $tableDescriber)
+    public function __construct(private TableDescriberInterface $tableDescriber)
     {
-        $this->tableDescriber = $tableDescriber;
     }
 
     /**
@@ -36,8 +26,6 @@ class MySqlTableHasher implements TableHasherInterface
      *
      * @param string $configType The config type - 'sync-client' or 'sync-server'
      * @param string $configName The key from config('sync-client.tables') or config('sync-server.tables')
-     *
-     * @return string
      */
     public function hash(string $configType, string $configName): string
     {

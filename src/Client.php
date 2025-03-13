@@ -7,32 +7,13 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Stickee\Sync\TableImporter;
 
-/**
- */
 class Client
 {
     /**
-     * The HTTP client
-     *
-     * @var \GuzzleHttp\Client $client
-     */
-    protected $client;
-
-    /**
-     * The sync service
-     *
-     * @var \Stickee\Sync\SyncService $syncService
-     */
-    protected $syncService;
-
-    /**
      * The number of files to get per HTTP request
-     *
-     * @var int $filesPerRequest
      */
-    public $filesPerRequest;
+    public int $filesPerRequest;
 
     /**
      * Constructor
@@ -40,10 +21,10 @@ class Client
      * @param \GuzzleHttp\Client $client The HTTP client
      * @param \Stickee\Sync\SyncService $syncService The sync service
      */
-    public function __construct(GuzzleClient $client, SyncService $syncService)
-    {
-        $this->client = $client;
-        $this->syncService = $syncService;
+    public function __construct(
+        protected GuzzleClient $client,
+        protected SyncService $syncService
+    ) {
         $this->filesPerRequest = Helpers::clientConfig('files_per_request');
     }
 
@@ -63,7 +44,7 @@ class Client
     {
         collect(Helpers::clientConfig('tables'))
             ->groupBy('connection', true)
-            ->each(function (Collection $tables, string $connectionName) {
+            ->each(function (Collection $tables, string $connectionName): void {
                 // TableImporter::initialise() uses DDL which will close any open transactions
                 // in MySQL, so initialise them all first
                 $importers = $tables->map(function ($config, $configName) {
@@ -109,12 +90,13 @@ class Client
             if ($singleTransaction) {
                 $connection->commit();
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
+            /** @phpstan-ignore if.alwaysTrue */
             if ($singleTransaction) {
                 $connection->rollback();
             }
 
-            throw $e;
+            throw $exception;
         } finally {
             $connection->statement('SET FOREIGN_KEY_CHECKS = 1');
             $connection->statement('SET UNIQUE_CHECKS = 1');
@@ -137,7 +119,7 @@ class Client
      * Synchronise a single table
      *
      * @param string $configName The key in config('sync-client.tables')
-     * @param \Stickee\Sync\TableImporter The table importer
+     * @param \Stickee\Sync\TableImporter $importer The table importer
      */
     protected function updateTable(string $configName, TableImporter $importer): void
     {
@@ -156,8 +138,8 @@ class Client
         }
 
         // TODO: make this better
-        $f = fopen('php://memory', 'w+');
-        fwrite($f, gzdecode((string)$response->getBody()));
+        $f = fopen('php://memory', 'w+b');
+        fwrite($f, gzdecode((string) $response->getBody()));
         fseek($f, 0);
 
         $importer->import($f);
@@ -177,9 +159,7 @@ class Client
         $this->syncService->deleteRemovedFiles($configName, $localHashes, $remoteHashes);
 
         // Remove unchanged files from the list to download
-        $fileList = $remoteHashes->reject(function ($hash, $file) use ($localHashes) {
-            return ($hash !== '') && ($hash === ($localHashes[$file] ?? null));
-        });
+        $fileList = $remoteHashes->reject(fn($hash, $file): bool => ($hash !== '') && ($hash === ($localHashes[$file] ?? null)));
 
         foreach ($fileList->chunk($this->filesPerRequest) as $chunk) {
             $this->updateFilesChunk($configName, $chunk->keys()->all());
@@ -204,7 +184,7 @@ class Client
             ]
         );
 
-        $data = json_decode((string)$response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true);
 
         return collect($data['hashes']);
     }
@@ -230,8 +210,8 @@ class Client
         $importer = app(FileImporter::class);
 
         // TODO: make this better
-        $f = fopen('php://memory', 'w+');
-        fwrite($f, (string)$response->getBody());
+        $f = fopen('php://memory', 'w+b');
+        fwrite($f, (string) $response->getBody());
         fseek($f, 0);
 
         $importer->importToDirectory($f, $configName);

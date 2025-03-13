@@ -8,12 +8,10 @@ class SyncCreateTables extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('sync_tests', function (Blueprint $table) {
+        Schema::create('sync_tests', function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->integer('test_1');
             $table->string('test_2');
@@ -21,7 +19,7 @@ class SyncCreateTables extends Migration
             $table->enum('test_4', ['A', 'B', 'C'])->nullable();
         });
 
-        Schema::create('sync_tests_client', function (Blueprint $table) {
+        Schema::create('sync_tests_client', function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->integer('test_1');
             $table->string('test_2');
@@ -32,10 +30,8 @@ class SyncCreateTables extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('sync_tests');
         Schema::dropIfExists('sync_tests_client');

@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Storage;
 use Stickee\Sync\Interfaces\DirectoryHasherInterface;
 use Stickee\Sync\Traits\UsesDirectories;
 
-/**
- */
 class NullDirectoryHasher implements DirectoryHasherInterface
 {
     use UsesDirectories;

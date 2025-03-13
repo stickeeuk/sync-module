@@ -9,14 +9,14 @@ class Helpers
      *
      * @var string SERVER_CONFIG
      */
-    const SERVER_CONFIG = 'sync-server';
+    public const SERVER_CONFIG = 'sync-server';
 
     /**
      * Prefix for client-side config
      *
      * @var string CLIENT_CONFIG
      */
-    const CLIENT_CONFIG = 'sync-client';
+    public const CLIENT_CONFIG = 'sync-client';
 
     /**
      * Get client configuration
