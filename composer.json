@@ -32,12 +32,20 @@
         "stickee/import": "2.2.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^7.0 || ^8.0 || ^9.0"
+        "orchestra/testbench": "^7.0 || ^8.0 || ^9.0",
+        "stickee/canary": "^4.0"
     },
     "repositories": [
         {
             "type": "composer",
             "url": "https://repo.stickee.co.uk"
         }
-    ]
+    ],
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse -c phpstan.dist.neon",
+        "analyze": "composer analyse",
+        "fix": "vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php",
+        "improve": "vendor/bin/rector",
+        "suggest": "vendor/bin/rector --dry-run"
+    }
 }
