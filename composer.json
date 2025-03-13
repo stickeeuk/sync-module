@@ -28,7 +28,7 @@
     },
     "require": {
         "php": "^8.3",
-        "stickee/import": "2.2.0"
+        "stickee/import": "^2.3.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
