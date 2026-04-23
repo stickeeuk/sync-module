@@ -19,6 +19,8 @@ return [
      |  - (string) table: The table name, if different to the key
      |  - (array) renames: Array of field renames to do in the format: FROM => TO
      |    Default: []
+     |  - (string) tableManager: The \Stickee\Sync\Interfaces\TableManagerInterface class
+     |    Default: \Stickee\Sync\TableManagers\AutoTableManager::class
      |
      | Example:
      | [
@@ -28,6 +30,7 @@ return [
      |     'db_2.table_1' => [
      |         'connection' => 'my_connection'
      |         'primary' => ['type', 'code'],
+     |         'tableManager' => \Stickee\Sync\TableManagers\AutoTableManager::class,
      |      ],
      |     'table_3' => ['renames' => ['remote_field' => 'local_field']],
      | ]

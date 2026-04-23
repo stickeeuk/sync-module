@@ -3,11 +3,23 @@
 namespace Stickee\Sync\Test\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Stickee\Sync\Client;
+use Stickee\Import\TableManagers\AutoTableManager;
 use Stickee\Sync\Interfaces\TableHasherInterface;
 use Stickee\Sync\TableImporter;
 use Stickee\Sync\Test\TestCase;
+
+class TestTableManager extends AutoTableManager
+{
+    public function create(): void
+    {
+        parent::create();
+
+        Cache::forever('test_table_manager_signal', true);
+    }
+};
 
 class TablesSyncTest extends TestCase
 {
@@ -39,6 +51,45 @@ class TablesSyncTest extends TestCase
 
         // From empty table
         $this->testSync($srcHash);
+
+        // Test extra records are deleted
+        DB::table('sync_tests_client')
+            ->insert([
+                'test_1' => 123,
+                'test_2' => 'x',
+                'test_3' => 'y',
+                'test_4' => null,
+            ]);
+
+        $this->testSync($srcHash);
+
+        // Test changed records are updated
+        DB::table('sync_tests_client')
+            ->update(['test_1' => 123]);
+
+        $this->testSync($srcHash);
+    }
+
+    /**
+     * Test syncing a table with a custom table manager
+     */
+    public function test_table_manager(): void
+    {
+        $this->useMysql();
+
+        Cache::forget('test_table_manager_signal');
+
+        Config::set('sync-client.tables.test_table.tableManager', TestTableManager::class);
+
+        $tableHasher = app(TableHasherInterface::class);
+
+        $srcHash = $tableHasher->hash('sync-server', 'test_table');
+
+        $this->assertEquals(0, DB::table('sync_tests_client')->count());
+
+        // From empty table
+        $this->testSync($srcHash);
+        $this->assertTrue(Cache::get('test_table_manager_signal', false));
 
         // Test extra records are deleted
         DB::table('sync_tests_client')

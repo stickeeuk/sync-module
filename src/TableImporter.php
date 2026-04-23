@@ -27,9 +27,7 @@ class TableImporter
      *
      * @param string $configName The key in config('sync-client.tables')
      */
-    public function __construct(private string $configName)
-    {
-    }
+    public function __construct(private string $configName) {}
 
     /**
      * Initialise the importer
@@ -46,7 +44,7 @@ class TableImporter
             ->all();
 
         $temporaryTableManager = app()->makeWith(
-            AutoTableManager::class,
+            $config['config']['tableManager'] ?? AutoTableManager::class,
             [
                 'db' => $connection,
                 'tableName' => $config['table'],
